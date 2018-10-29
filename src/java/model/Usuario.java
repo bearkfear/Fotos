@@ -115,6 +115,10 @@ public final class Usuario {
 
     /**
      *
+     * Remove uma imagem da lista de imagens do usuário.
+     * 
+     * 
+     * 
      * @param imagem
      */
     public void removerImagem(Imagem imagem) {
@@ -123,9 +127,10 @@ public final class Usuario {
     }
 
     /**
-     * Retorna a quantidade de imagens de um usuario
+     * Retorna a quantidade de imagens de um usuario.
+     * Ao utilizar o metodo é é retornado um inteiro do número de imagens que tem na lista do usuario
      *
-     * @return
+     * @return quantidade
      */
     public int quantidadeImagens() {
         return this.imagens.size();

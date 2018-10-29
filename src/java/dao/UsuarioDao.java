@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.sql.Connection;
@@ -13,15 +8,20 @@ import java.sql.Statement;
 import model.Usuario;
 
 /**
+ * Classe responsável pelo CRUD das imagens. Todas os acessos ao banco de dados
+ * são feitos pelos cruds. Os métodos disponível para acesso, remoção,
+ * atualização ...
  *
  * @author Enrico
  */
 public class UsuarioDao {
 
     /**
-     * Cria um usuario no banco de dados retornando o mesmo usuario com o codigo
-     * dele caso não consiga criar o usuario no banco, retorna null
-     *
+     * Cria um usuario no banco de dados. O método create irá criar um usuário
+     * no banco de dados apartir de um objeto usuário parcialmente montado, Após
+     * criar o mesmo, será retornado o mesmo objeto porem completo, incluíndo o
+     * seu codigo. Caso não seja possível criar um usuário no banco de dados,
+     * será retornado um null.
      *
      * @param usuario
      * @return usuario
@@ -62,9 +62,12 @@ public class UsuarioDao {
     }
 
     /**
+     * Método que lê um usuário no banco de dados. 
+     * Esse método ao ser chamado, será capaz de ler todo um usuário que esteja no banco de dados a partir de um código.
+     * Também retornará com ele a lista de imagens que o mesmo tem.
      *
      * @param codigo
-     * @return
+     * @return Usuario
      */
     public Usuario read(int codigo) {
         try (Connection conexao = new ConectaBancoDados().getConexao()) {
@@ -122,14 +125,15 @@ public class UsuarioDao {
     }
 
     /**
-     * Lê um usuario do banco de dados a partir do seu email e codigo;
+     * Lê um usuario do banco de dados.
+     * Quando chamado, será possível ser feita a leitura do usuário que está no banco de dados.
+     * É necessário prover o email e a senha do usuário, ou seja, é voltado para a autenticação do mesmo no sistema.
+     * Retorna com ele a lista de imagens que o mesmo tem.
      *
      * @param email
      * @param senha
      * @return
      */
-    
-    
     public Usuario read(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
@@ -162,12 +166,11 @@ public class UsuarioDao {
     }
 
     /**
-     * Atualiza as informações de um usuario de acordo com o seu codigo
-     *
-     * possivel atualizar: nome, senha, sobre e a url da imagem de perfil;
-     *
+     * Atualiza as informações de um usuario de acordo com o seu codigo.
+     * O método é capaz de atualizar informações que estão no banco de dados, não lida com as imagens do mesmo.
+     * 
      * @param usuario
-     * @return
+     * @return true ou false
      */
     public boolean update(Usuario usuario) {
 
@@ -191,7 +194,10 @@ public class UsuarioDao {
     }
 
     /**
-     * Metodo que remove um usuário do sistema incluindo suas imagens
+     * Metodo que remove um usuário do banco de dados.
+     * Esse método utiliza o metodo de ImagensDao().delete(usuario);
+     * pois para remover um usuário do banco de dados é necessário primeiramente remover todas as imagens que o mesmo tem
+     * Após ser feita a remoção das imagens do usuário, é retornado para o método em questão é feita a remoção do usuário do banco.
      *
      * @param usuario
      * @return true or false
