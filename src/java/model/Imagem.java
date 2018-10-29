@@ -16,6 +16,10 @@ package model;
  */
 /**
  *
+ * Classe Imagem representa as cada imagem que o sistema suportará. 
+ * Somente um usuário pode fazer download porem, qualquer pessoa, logada ou anonima poderá
+ * as ver
+ *
  * @author Enrico
  */
 public final class Imagem {
@@ -28,10 +32,14 @@ public final class Imagem {
 
     /**
      *
+     * Contrutor de montagem, recebe "n" informações para criar uma imagem no
+     * sistema
+     *
      * @param codigo
      * @param titulo
      * @param descricao
      * @param numeroAcessos
+     * @param url
      */
     public Imagem(int codigo, String titulo, String descricao, int numeroAcessos, String url) {
         this.codigo = codigo;
@@ -40,21 +48,37 @@ public final class Imagem {
         this.numeroAcessos = numeroAcessos;
         this.url = url;
     }
-
+/**
+ * Cria uma imagem sem o código;
+ * @param titulo
+ * @param descricao
+ * @param numeroAcessos
+ * @param url 
+ */
+    public Imagem(String titulo, String descricao, int numeroAcessos, String url) {
+        this.setTitulo(titulo);
+        this.setDescricao(descricao);
+        this.setNumeroAcessos(numeroAcessos);
+        this.setUrl(url);
+    }
+    
+    /**
+     * construtor vazio
+     */
     public Imagem() {
 
     }
 
     /**
-     *
-     * @return
+     *  pega o codigo da imagem
+     * @return codigo
      */
     public int getCodigo() {
         return codigo;
     }
 
     /**
-     *
+     *  seta um codigo para a imagem
      * @param codigo
      */
     public void setCodigo(int codigo) {
@@ -62,7 +86,7 @@ public final class Imagem {
     }
 
     /**
-     *
+     *  retorna o titulo da imagem
      * @return
      */
     public String getTitulo() {
@@ -70,7 +94,7 @@ public final class Imagem {
     }
 
     /**
-     *
+     *  seta um titulo para a image
      * @param titulo
      */
     public void setTitulo(String titulo) {
@@ -78,7 +102,7 @@ public final class Imagem {
     }
 
     /**
-     *
+     *retorna a descrição da imagem
      * @return
      */
     public String getDescricao() {
@@ -86,7 +110,7 @@ public final class Imagem {
     }
 
     /**
-     *
+     *seta a descrição da imagem
      * @param descricao
      */
     public void setDescricao(String descricao) {
@@ -94,7 +118,7 @@ public final class Imagem {
     }
 
     /**
-     *
+     *retorna o numero de acessos
      * @return
      */
     public int getNumeroAcessos() {
@@ -102,16 +126,26 @@ public final class Imagem {
     }
 
     /**
-     *
+     *seta um numero de acessos
      * @param numeroAcessos
      */
     public void setNumeroAcessos(int numeroAcessos) {
         this.numeroAcessos = numeroAcessos;
     }
 
+    
+    /**
+     * seta a url da imagem no sistema
+     * @param url 
+     */
     public void setUrl(String url) {
         this.url = url;
     }
+    
+    /**
+     * retorna a url da imagem no sistema
+     * @return url
+     */
 
     public String getUrl() {
         return this.url;

@@ -22,6 +22,7 @@ public class UsuarioDao {
      * Cria um usuario no banco de dados retornando o mesmo usuario com o codigo
      * dele caso não consiga criar o usuario no banco, retorna null
      *
+     *
      * @param usuario
      * @return usuario
      */
@@ -49,6 +50,8 @@ public class UsuarioDao {
                 if (codigo != 0) {
                     usuario.setCodigo(codigo);
                     return usuario;
+                } else {
+                    return null;
                 }
             }
 
@@ -71,7 +74,13 @@ public class UsuarioDao {
             ResultSet rs = pre.executeQuery();
             rs.next();
 
-            Usuario usuario = new Usuario(rs.getInt("codigo"), rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getString("sobre"), rs.getString("img_url"));
+            Usuario usuario = new Usuario(
+                    rs.getInt("codigo"),
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    rs.getString("senha"),
+                    rs.getString("sobre"),
+                    rs.getString("img_url"));
 
             usuario.setImagens(new ImagemDao().readImagens(codigo));
 
@@ -87,7 +96,7 @@ public class UsuarioDao {
      * Retorna a url da imagem de um usuario;
      *
      * @param email
-     * @return
+     * @return url
      */
     public Usuario read(String email) {
 
@@ -112,6 +121,15 @@ public class UsuarioDao {
         return null;
     }
 
+    /**
+     * Lê um usuario do banco de dados a partir do seu email e codigo;
+     *
+     * @param email
+     * @param senha
+     * @return
+     */
+    
+    
     public Usuario read(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
@@ -122,8 +140,18 @@ public class UsuarioDao {
             pre.setString(2, senha);
             ResultSet rs = pre.executeQuery();
 
+            Usuario usuario;
+
             while (rs.next()) {
-                return new Usuario(rs.getInt("codigo"), rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getString("sobre"), rs.getString("img_url"));
+                usuario = new Usuario(
+                        rs.getInt("codigo"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getString("sobre"),
+                        rs.getString("img_url"));
+                usuario.setImagens(new ImagemDao().readImagens(usuario));
+                return usuario;
             }
 
         } catch (SQLException ex) {
@@ -163,18 +191,27 @@ public class UsuarioDao {
     }
 
     /**
+     * Metodo que remove um usuário do sistema incluindo suas imagens
      *
-     * @param codigo
-     *
+     * @param usuario
+     * @return true or false
      */
-    public boolean delete(int codigo) {
+    public boolean delete(Usuario usuario) {
 
+        String sql = "DELETE FROM usuario WHERE usuario.codigo = ?";
         try (Connection conexao = new ConectaBancoDados().getConexao()) {
-            String sql = "DELETE from usuario where usuario.codigo = ?";
-            PreparedStatement pre = conexao.prepareStatement(sql);
-            pre.setInt(1, codigo);
-            if (pre.executeUpdate() != 0) {
-                return true;
+
+            if (new ImagemDao().delete(usuario)) {
+
+                PreparedStatement pre = conexao.prepareStatement(sql);
+                pre.setInt(1, usuario.getCodigo());
+                if (pre.executeUpdate() != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
 
         } catch (SQLException ex) {

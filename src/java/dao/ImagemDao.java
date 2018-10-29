@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.sql.Connection;
@@ -12,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import model.Usuario;
 
 /**
  * Implementa os CRUD's no banco de dados Cria, Le, Atualiza e remove
@@ -34,8 +30,9 @@ public class ImagemDao {
     public Imagem create(Imagem imagem, int codigoUsuario) {
         try (Connection conexao = new ConectaBancoDados().getConexao()) {
 
-            //insert into imagem (titulo, descricao, data, numeroAcessos, usuario_codigo, url);
             String sql = "INSERT INTO imagem (titulo, descricao, numeroacessos, usuario_codigo, url) VALUES (?,?,?,?,?)";
+
+            // retorna a chave gerada
             PreparedStatement pre = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             //titulo
@@ -51,7 +48,10 @@ public class ImagemDao {
             //url
             pre.setString(5, imagem.getUrl());
 
-            pre.executeQuery();
+            /*
+            Visto que para utilizar o getGeneratedKeys é necessário fazer uso do executeUpdate() em vez do executeQuery()
+             */
+            pre.executeUpdate();
 
             // retorna o codigo gerado pelo banco de dados;
             ResultSet rs = pre.getGeneratedKeys();
@@ -109,11 +109,11 @@ public class ImagemDao {
     /**
      * Busca todas as imagens que um usuario tem retornando um ArrayList
      *
-     * @param codigoUsuario
+     * @param usuario
      * @return
      */
-    public ArrayList<Imagem> readImagens(int codigoUsuario) {
-
+    public ArrayList<Imagem> readImagens(Usuario usuario) {
+        int codigoUsuario = usuario.getCodigo();
         try (Connection conexao = new ConectaBancoDados().getConexao()) {
 
             String sql = "SELECT * FROM imagem WHERE imagem.usuario_codigo = ?";
@@ -152,9 +152,7 @@ public class ImagemDao {
     public boolean update(Imagem imagem) {
         try (Connection conexao = new ConectaBancoDados().getConexao()) {
 
-            /*
-            Atualiza a entidade Imagem no banco de dados;
-             */
+            //Atualiza a entidade Imagem no banco de dados;
             String sql = "UPDATE imagem SET titulo = ?, descricao = ?, numeroAcessos = ?";
             PreparedStatement pre = conexao.prepareStatement(sql);
             // titulo
@@ -164,7 +162,11 @@ public class ImagemDao {
             // numeroAcessos 
             pre.setInt(3, imagem.getNumeroAcessos());
 
-            return pre.executeUpdate() != 0;
+            if (pre.executeUpdate() != 0) {
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -184,7 +186,12 @@ public class ImagemDao {
             String sql = "DELETE FROM imagem WHERE imagem.codigo = ?";
             PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setInt(1, codigo);
-            return pre.executeUpdate() != 0;
+
+            if (pre.executeUpdate() != 0) {
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -192,28 +199,66 @@ public class ImagemDao {
         return false;
     }
 
+    
+    /**
+     * Remove todas as imagens de um usúário, Feito para ser utilizado ao remover um usuario do sistema
+     * @param usuario
+     * @return 
+     */
+    public boolean delete (Usuario usuario) {
+        
+        String sql = "DELETE FROM imagem WHERE imagem.usuario_codigo = ?";
+        
+        try (Connection conexao = new ConectaBancoDados().getConexao()) {
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            pre.setInt(1, usuario.getCodigo());
+            
+            if (pre.executeUpdate() != 0) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
     /**
      * Metodo que consulta todas as imagens indepentende de usuário, e traz as
      * mais recentes adicionadas Também orderna por codigo e limita a 10 imagens
      * por consulta
      *
+     * @param offset
      * @return ArrayList
      */
-    public ArrayList<Imagem> readImagens() {
+    public ArrayList<Imagem> readImagens(int offset) {
+
+        int limite = 10;
 
         // ORDENADO PELO CODIGO E COM LIMITE DE 10
-        String sql = "SELECT * FROM imagem ORDER BY CODIGO DESC LIMIT 10";
+        String sql = "SELECT * FROM imagem ORDER BY codigo DESC LIMIT ? OFFSET ?"; // implementar offset em futura manutenção
 
         try (Connection con = new ConectaBancoDados().getConexao()) {
 
             PreparedStatement pre = con.prepareStatement(sql);
+
+            pre.setInt(1, limite);
+            pre.setInt(2, offset);
+
             ResultSet rs = pre.executeQuery();
 
             ArrayList<Imagem> imagens = new ArrayList<>();
 
-            // imagem: titulo, descricao, **data, numeroAcessos, usuario_codigo, url
+            // imagem: titulo, descricao, numeroAcessos, usuario_codigo, url
             while (rs.next()) {
-                imagens.add(new Imagem(rs.getInt("codigo"), rs.getString("titulo"), rs.getString("descricao"), rs.getInt("numeroacessos"), rs.getString("url")));
+                imagens.add(
+                        new Imagem(
+                                rs.getInt("codigo"),
+                                rs.getString("titulo"),
+                                rs.getString("descricao"),
+                                rs.getInt("numeroacessos"),
+                                rs.getString("url")));
             }
 
             return imagens;
