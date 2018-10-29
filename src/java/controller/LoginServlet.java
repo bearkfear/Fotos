@@ -18,32 +18,23 @@ import model.Usuario;
 @WebServlet(urlPatterns = "/logar")
 public class LoginServlet extends HttpServlet {
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        // pega o value do submit com name opcao
-        String opcao = "";
+        
+        // Variável que irá receber o valor do parâmetro do form, que tem atributo name[opcao].
+        String opcao = null;
 
         try {
             /**
              * Sobre os parâmetros.
-             * 
-             * Só podem existir dois tipos de parâmetros:
-             * 1. Uma String com "entrar", que significa que foi feito a requisição de um email;
-             * 2. Uma String com "eandp", que signifíca que foi feita a requisição de um login completo;
+             *
+             * Só podem existir dois tipos de parâmetros: 1. Uma String com
+             * "entrar", que significa que foi feito a requisição de um email;
+             * 2. Uma String com "eandp", que signifíca que foi feita a
+             * requisição de um login completo;
              */
             opcao = req.getParameter("opcao");
-            
+
         } catch (NullPointerException e) {
             System.out.println(e);
         } catch (Exception ex) {
@@ -51,55 +42,86 @@ public class LoginServlet extends HttpServlet {
         }
 
         switch (opcao) {
-            
-            
+
             case "entrar": {
-                // caso ele peça apenas o email retorna-se para a página de login com email e senha, fixando o email e a senha do usuario;
-                String email = req.getParameter("email");
+
+                String email = null;
+
+                // tenta pegar o parametro email
+                try {
+                    email = req.getParameter("email");
+                } catch (NullPointerException e) {
+                    System.out.println(e);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+
                 Usuario usuario = new UsuarioDao().read(email);
-                if (usuario.equals(null)) {
-                    // Retorna erro
-                } else {
-                    System.out.println("Email usuarii" + email);
-                    System.out.println("imagem usuario" + usuario.getUrlImg());
+
+                if (usuario != null) {
+
                     req.setAttribute("email", email);
                     req.setAttribute("imagem", usuario.getUrlImg());
                     req.setAttribute("contexto", req.getContextPath());
 
                     req.getRequestDispatcher("/pages/signin.jsp").forward(req, resp);
+
+                } else {
+
+                    req.setAttribute("nota", "Email não existe!");
+                    req.setAttribute("imagem", "default.png");
+                    req.setAttribute("contexto", req.getContextPath());
+                    req.getRequestDispatcher("/pages/signin.jsp").forward(req, resp);
+
+                    // FALHA, EMAIL NÃO ENCONTRADO OU NÃO FOI POSSÍVEL CONECTAR
                 }
                 break;
             }
-            
-            
-            
-            
-            
-            
-            
-            
+
             case "eandp": {
-                System.out.println("Entrou no e and p");
-                // pede para logar com email e senha;
-                String email = req.getParameter("email");
-                String senha = req.getParameter("pass");
-                Usuario u = new UsuarioDao().read(email, senha);
-                if (u.equals(null)) {
-                    /* Falha, redirecionar usuarios para pagina de erro  */
-                    System.out.println("Erro!");
-                    req.setAttribute("nota", "falha");
-                } else {
-                    /* sucesso, redirecionar usuario para dashboard */
+
+                String email = null;
+                String senha = null;
+
+                try {
+                    email = req.getParameter("email");
+                    senha = req.getParameter("pass");
+                } catch (NullPointerException e) {
+                    System.out.println(e);
+                }
+
+                Usuario usuario = new UsuarioDao().read(email, senha);
+
+                if (usuario != null) {
+
+                    // SUCESSO, REDIRECIONAR PARA DASHBOARD;
                     HttpSession session = req.getSession();
-                    session.setAttribute("usuarioLogado", u);
+                    session.setAttribute("usuarioLogado", usuario);
                     resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
 
+                } else {
+                    /**
+                     * FALHA AO LOGAR USUÁRIO.
+                     *
+                     * REDIRECIONAR PARA SIGNIN INFORMANDO FALHA, POSSÍVEL DE
+                     * SER EMAIL OU SENHA INCORRETOS.
+                     */
+                    
+                    req.setAttribute("imagem", "default.png");
+                    req.setAttribute("nota", "Email ou senha incorretos, tente novamente!");
+                    req.setAttribute("contexto", req.getContextPath());
+                    req.getRequestDispatcher("/pages/signin.jsp").forward(req, resp);
                 }
                 break;
             }
-            default:
-                resp.sendRedirect("index.jsp");
-                break;
+
+            default: {
+ 
+                req.setAttribute("imagem", "default.png");
+                req.setAttribute("nota", "Alguma coisa não está certa, por favor tente mais tarde!");
+                req.setAttribute("contexto", req.getContextPath());
+                req.getRequestDispatcher("/pages/signin.jsp").forward(req, resp);
+            }
         }
 
     }

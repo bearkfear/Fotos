@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import java.io.IOException;
@@ -28,6 +23,8 @@ public class LogOffServlet extends HttpServlet {
         try {
             s.invalidate();
         } catch (IllegalStateException e) {
+            System.out.println(e);
+        } catch (Exception e) {
             System.out.println(e);
         }
         resp.sendRedirect(req.getContextPath() + "/index.jsp");

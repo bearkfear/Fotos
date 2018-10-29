@@ -111,11 +111,20 @@ public class UsuarioDao {
             pre.setString(1, email);
             ResultSet rs = pre.executeQuery();
 
+            String url = null;
             while (rs.next()) {
-                Usuario u = new Usuario();
-                u.setUrlImg(rs.getString("img_url"));
-                return u;
+                
+                url = rs.getString("img_url");
             }
+            
+            if (url != null ) {
+                Usuario usuario = new Usuario();
+                usuario.setUrlImg(url);
+                return usuario;
+            } else {
+                return null;
+            }
+            
 
         } catch (SQLException e) {
             System.out.println(e);
