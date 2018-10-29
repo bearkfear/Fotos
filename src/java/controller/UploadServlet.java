@@ -28,7 +28,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @author Enrico
  */
 @WebServlet(urlPatterns = "/img")
-public class UploadImagensServlet extends HttpServlet {
+public class UploadServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

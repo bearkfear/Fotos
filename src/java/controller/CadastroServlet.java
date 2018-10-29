@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.UsuarioDao;
@@ -17,11 +12,13 @@ import javax.servlet.http.HttpSession;
 import model.Usuario;
 
 /**
- *
+ * Cadastro de usuário.
+ * Servlet que responde a requisições do tipo POST para efetuar cadastro de usuários no sistema.
+ * 
  * @author Enrico
  */
 @WebServlet(urlPatterns = "/cadastrar")
-public class CadastrarUsuarioServlet extends HttpServlet {
+public class CadastroServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

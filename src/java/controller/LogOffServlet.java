@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  * @author Enrico
  */
 @WebServlet(name = "LogoffServlet", urlPatterns = {"/logoff"})
-public class LogoffServlet extends HttpServlet {
+public class LogOffServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
