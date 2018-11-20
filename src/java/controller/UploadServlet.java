@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Imagem;
 import model.Usuario;
 import org.apache.commons.fileupload.FileItem;
@@ -58,7 +57,7 @@ public class UploadServlet extends HttpServlet {
             Iterator<FileItem> iter = multifiles.iterator();
 
             ImagemDao imagemDao = new ImagemDao();
-            String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img";
+            String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
             while (iter.hasNext()) {
                 FileItem item = iter.next();
 
@@ -67,16 +66,14 @@ public class UploadServlet extends HttpServlet {
 
                 // salvar informações no banco
                 Imagem imagem = new Imagem();
-                imagem.setTitulo(item.getName());
-                imagem.setDescricao("Edite sua imagem e crie uma descrição");
+                imagem.setDescricao(item.getName());
                 imagem.setUrl(url);
-                imagemDao.create(imagem, u.getCodigo());
+                //imagemDao.create(imagem, u.getCodigo());
 
                 // cria um arquivo com local, nome e a extensao do arquivo
                 File f = new File(caminho + url);
                 // grava o arquivo na pasta;
                 item.write(f);
-                System.out.println("GRavou a " + item.getName() + " como " + imagem.getUrl());
             }
             
             // redireciona 

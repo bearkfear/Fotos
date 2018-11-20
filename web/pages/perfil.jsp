@@ -4,6 +4,7 @@
     Author     : Enrico
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="model.Usuario"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Imagem"%>
@@ -14,6 +15,7 @@
     if (request.getSession().getAttribute("usuarioLogado") == null) {
         response.sendRedirect("../index.jsp");
     }
+
 
 %>
 
@@ -42,7 +44,7 @@
                     <li>
                         <a href="#" class="dropdown-trigger valign-wrapper" data-target="dropDownUser">
                             <img src="../img/user/${sessionScope['usuarioLogado'].getUrlImg()}" alt="Imagem de perfil usuario" class="responsive-img" width="30px"
-                                 height="30px" style="border-radius: 5px">&nbsp;&nbsp;${sessionScope['usuarioLogado'].getNome()}
+                                 height="30px" style="border-radius: 5px">&nbsp;&nbsp;Este é o seu perfil, ${sessionScope['usuarioLogado'].getNome()}
                         </a>
                     </li>
 
@@ -115,7 +117,7 @@
 
                 } else {
 
-                    for (Imagem imagem : imagens ) {
+                    for (Imagem imagem : imagens) {
 
             %>
 
@@ -140,7 +142,6 @@
             <%                    }
                 }
 
-                
 
             %>
 
@@ -182,7 +183,8 @@
 
         <script src="../materialize/js/jquery-3.3.1.min.js"></script>
         <script src="../materialize/js/materialize.js"></script>
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
         <script src="../materialize/js/index.js"></script>
 
     </body>

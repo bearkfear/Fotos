@@ -10,45 +10,46 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Imagem;
+import model.Associa;
+import model.Marcador;
 
 /**
  *
  * @author campo
  */
-public class ImagemDao {
+public class AssociaDao {
     
     
-    
-    public ArrayList<Imagem> readImagesFromUser(int codigo) {
+    public ArrayList<Associa> readAssociationsFromImage (int codigo) {
         
-        String sql = "SELECT * FROM imagem WHERE usuario_codigo = ?";
+        String sql = "SELECT * FROM associa WHERE codigo_imagem = ?";
         
         try (Connection con = new ConnectionFactory().getConexao()) {
             
+            
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, codigo);
+            
             ResultSet rs = pre.executeQuery();
             
-            ArrayList<Imagem> imagens = new ArrayList();
-            while (rs.next()) {
-                Imagem image = new Imagem();
-                image.setUrl(rs.getString("url"));
-                image.setCodigo(rs.getInt("codigo"));
-                image.setDescricao(rs.getString("descricao"));
-                image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo()));
-                image.getAssociacoes().forEach(marcador -> marcador.setImagem(image));
-                imagens.add(image);
-            }
-            return imagens;
+            ArrayList<Associa> associacoes = new ArrayList<>();
             
+            while (rs.next()) {
+                Associa associa = new Associa();
+                associa.setMarcador(new MarcadorDao().read(rs.getInt("codigo_marcador")));
+                associacoes.add(associa);
+            }
+            
+            return associacoes;
         } catch (SQLException e) {
             
         }
         
+        
         return null;
+        
+        
+        
     }
-    
-    
     
 }

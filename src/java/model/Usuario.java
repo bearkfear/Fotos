@@ -17,8 +17,10 @@ import java.util.ArrayList;
  */
 /**
  *
- * Classe Usuario, contem os metodos e atributos aplicaveis a um usuario.
- * Um usuário pode ter várias imagens fazendo o upload delas, pode ver suas imagens também;
+ * Classe Usuario, contem os metodos e atributos aplicaveis a um usuario. Um
+ * usuário pode ter várias imagens fazendo o upload delas, pode ver suas imagens
+ * também;
+ *
  * @author Enrico
  */
 public final class Usuario {
@@ -33,9 +35,10 @@ public final class Usuario {
 
     /**
      * Define um usuario com as suas informaçóes carregadas do banco de dados.
-     * Quando um usuário já existe e for feito a autenticação do mesmo
-     * será criado um objeto do mesmo no servidor utilizando o construtor com todas as informações
-     * e serão carregadas todas as suas imagens também para fins de que internauta possa ver-las em seu perfil.
+     * Quando um usuário já existe e for feito a autenticação do mesmo será
+     * criado um objeto do mesmo no servidor utilizando o construtor com todas
+     * as informações e serão carregadas todas as suas imagens também para fins
+     * de que internauta possa ver-las em seu perfil.
      *
      * @param codigo
      * @param nome
@@ -54,11 +57,11 @@ public final class Usuario {
     }
 
     /**
-     * Cria um usuario com as informações básicas.
-     * Ao ser feito o cadastro de um usuário do sistema, será montado um objeto do usuário
-     * utilizando este construtor. O contrutor cria informações básicas sobre o usuario.
-     * Informações tais como imagem do usuário já são definidas por padrão no sistema, a imagem está na pasta
-     * img/users/default.png
+     * Cria um usuario com as informações básicas. Ao ser feito o cadastro de um
+     * usuário do sistema, será montado um objeto do usuário utilizando este
+     * construtor. O contrutor cria informações básicas sobre o usuario.
+     * Informações tais como imagem do usuário já são definidas por padrão no
+     * sistema, a imagem está na pasta img/users/default.png
      *
      * @param nome
      * @param email
@@ -73,7 +76,6 @@ public final class Usuario {
         this.urlImg = "default.png";
     }
 
-    
     /**
      * Construtor vázio!
      */
@@ -82,9 +84,11 @@ public final class Usuario {
     }
 
     /**
-     * Seta uma url para a imagem do usuario.
-     * As imagens são armazenadas em pastas e não no banco de dados, apenas as suas urls são armazenadas no banco
-     * sendo manipuladas dinamicamente de acordo com a localização da pagina e do arquivo
+     * Seta uma url para a imagem do usuario. As imagens são armazenadas em
+     * pastas e não no banco de dados, apenas as suas urls são armazenadas no
+     * banco sendo manipuladas dinamicamente de acordo com a localização da
+     * pagina e do arquivo
+     *
      * @param url
      */
     public void setUrlImg(String url) {
@@ -92,8 +96,8 @@ public final class Usuario {
     }
 
     /**
-     * Retorna a url da imagem do usuario.
-     * Utilizada em todas as imaginas que o mesmo estiver logado
+     * Retorna a url da imagem do usuario. Utilizada em todas as imaginas que o
+     * mesmo estiver logado
      *
      * @return url
      */
@@ -102,23 +106,30 @@ public final class Usuario {
     }
 
     /**
-     * Adiciona uma imagem a um usuario específico.
-     * Ao ser feito o upload de uma ou várias imagens pelo usuário. 
-     * O sistema adiciona todas uma de cada vez a uma lista de imagens.
-     * Esse método é utilizado para adicinar as imagens a lista.
+     * Adiciona uma imagem a um usuario específico. Ao ser feito o upload de uma
+     * ou várias imagens pelo usuário. O sistema adiciona todas uma de cada vez
+     * a uma lista de imagens. Esse método é utilizado para adicinar as imagens
+     * a lista.
      *
      * @param imagem
      */
     public void adicionarImagem(Imagem imagem) {
-        this.imagens.add(imagem);
+        if (imagens == null) {
+            this.imagens = new ArrayList<Imagem>();
+
+            this.imagens.add(imagem);
+        } else {
+
+            this.imagens.add(imagem);
+        }
     }
 
     /**
      *
      * Remove uma imagem da lista de imagens do usuário.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param imagem
      */
     public void removerImagem(Imagem imagem) {
@@ -127,8 +138,8 @@ public final class Usuario {
     }
 
     /**
-     * Retorna a quantidade de imagens de um usuario.
-     * Ao utilizar o metodo é é retornado um inteiro do número de imagens que tem na lista do usuario
+     * Retorna a quantidade de imagens de um usuario. Ao utilizar o metodo é é
+     * retornado um inteiro do número de imagens que tem na lista do usuario
      *
      * @return quantidade
      */
