@@ -24,11 +24,11 @@
 
         <nav class="indigo z-depth-2">
             <div class="nav-wrapper container">
-                <a href="../index.html" class="brand-logo">Foto.com</a>
+                <a href="../index.jsp" class="brand-logo">Foto.com</a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="../index.jsp">Home</a></li>
-                    <li class="active"><a href="cadastro.html">Cadastrar-se</a></li>
+                    <li class="active"><a href="cadastro.jsp">Cadastrar-se</a></li>
                     <!-- Links da navbar -->
 
                 </ul>

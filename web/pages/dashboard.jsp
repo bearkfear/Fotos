@@ -1,9 +1,4 @@
-<%-- 
-    Document   : new
-    Created on : 18/10/2018, 03:41:42
-    Author     : Enrico
---%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.ArrayList"%>
 <%@page import="dao.ImagemDao"%>
 <%@page import="model.Imagem"%>
@@ -14,9 +9,13 @@
         response.sendRedirect("../index.jsp");
     }
 
+    ArrayList<Imagem> imagens = new ImagemDao().readImagens(0);
+    pageContext.setAttribute("imagens", imagens);
+
+    
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
     <head>
         <meta charset="UTF-8">
@@ -166,41 +165,17 @@
         </div>
         <div class="divider"></div>
 
-
-
-
         <!-- ONDE FICA AS IMAGENS SALVAS NO SERVIDOR -->
 
-
-
-        <div class="gg-box" >
-
-            <%                ArrayList<Imagem> imagens = new ImagemDao().readImagens();
-                if (imagens == null) {
-                } else {
-
-                    for (Imagem imagem : imagens) {
-            %>
-
-
-
-            <div class="gg-element">
-                <a data-fancybox="gallery" href="../img/<% out.print(imagem.getUrl()); %>" data-caption="<strong><% out.print(imagem.getTitulo()); %></strong><br><% out.print(imagem.getDescricao()); %> "><img
-                        src="../img/<% out.print(imagem.getUrl()); %>" title="<% out.print(imagem.getTitulo()); %>"></a>
-            </div>
-
-            <%
-                    }
-                }
-            %>
-
+        <div class="gg-box">
+            <c:forEach  var="imagem" items="${imagens}">
+                <div class="gg-element">
+                    <a data-fancybox="gallery" href="../img/${imagem.getUrl()}" data-caption="<strong>${imagem.getTitulo()}</strong><br> ${imagem.getDescricao()}">
+                        <img src="../img/${imagem.getUrl()}" title="${imagem.getTitulo()}">
+                    </a>
+                </div>
+            </c:forEach>
         </div>
-
-
-
-
-
-
 
         <footer class="page-footer indigo">
             <div class="container">
@@ -224,7 +199,7 @@
 
 
 
-            <form action="../logoff" method="GET" id="sair" class="display: hidden;">
+        <form action="../logoff" method="GET" id="sair" class="display: hidden;">
         </form>
 
 

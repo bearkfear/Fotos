@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 /*
  CREATE TABLE Imagem
     (
@@ -25,129 +27,44 @@ package model;
 public final class Imagem {
 
     private int codigo;
-    private String titulo;
     private String url;
     private String descricao;
-    private int numeroAcessos;
+    private ArrayList<Associa> associacoes;
 
-    /**
-     *
-     * Contrutor de montagem, recebe "n" informações para criar uma imagem no
-     * sistema
-     *
-     * @param codigo
-     * @param titulo
-     * @param descricao
-     * @param numeroAcessos
-     * @param url
-     */
-    public Imagem(int codigo, String titulo, String descricao, int numeroAcessos, String url) {
-        this.codigo = codigo;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.numeroAcessos = numeroAcessos;
-        this.url = url;
-    }
-/**
- * Cria uma imagem sem o código;
- * @param titulo
- * @param descricao
- * @param numeroAcessos
- * @param url 
- */
-    public Imagem(String titulo, String descricao, int numeroAcessos, String url) {
-        this.setTitulo(titulo);
-        this.setDescricao(descricao);
-        this.setNumeroAcessos(numeroAcessos);
-        this.setUrl(url);
-    }
     
-    /**
-     * construtor vazio
-     */
-    public Imagem() {
-
-    }
-
-    /**
-     *  pega o codigo da imagem
-     * @return codigo
-     */
+    
     public int getCodigo() {
         return codigo;
     }
 
-    /**
-     *  seta um codigo para a imagem
-     * @param codigo
-     */
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
-    /**
-     *  retorna o titulo da imagem
-     * @return
-     */
-    public String getTitulo() {
-        return titulo;
+    public String getUrl() {
+        return url;
     }
 
-    /**
-     *  seta um titulo para a image
-     * @param titulo
-     */
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    /**
-     *retorna a descrição da imagem
-     * @return
-     */
     public String getDescricao() {
         return descricao;
     }
 
-    /**
-     *seta a descrição da imagem
-     * @param descricao
-     */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    /**
-     *retorna o numero de acessos
-     * @return
-     */
-    public int getNumeroAcessos() {
-        return numeroAcessos;
+    public ArrayList<Associa> getAssociacoes() {
+        return associacoes;
     }
 
-    /**
-     *seta um numero de acessos
-     * @param numeroAcessos
-     */
-    public void setNumeroAcessos(int numeroAcessos) {
-        this.numeroAcessos = numeroAcessos;
-    }
-
-    
-    /**
-     * seta a url da imagem no sistema
-     * @param url 
-     */
-    public void setUrl(String url) {
-        this.url = url;
+    public void setAssociacoes(ArrayList<Associa> associacoes) {
+        this.associacoes = associacoes;
     }
     
-    /**
-     * retorna a url da imagem no sistema
-     * @return url
-     */
-
-    public String getUrl() {
-        return this.url;
-    }
+    
+    
 }

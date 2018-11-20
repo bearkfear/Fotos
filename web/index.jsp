@@ -3,6 +3,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Imagem"%>
 <%@page import="dao.ImagemDao"%>
+<%pageContext.setAttribute("imagens", new ImagemDao().readImagens(0));%>
+
 
 
 <!DOCTYPE html>
@@ -12,8 +14,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-
         <link rel="stylesheet" href="materialize/css/materialize.css">
         <link rel="stylesheet" href="materialize/css/grid-gallery.min.css">
         <!--Import Google Icon Font-->
@@ -22,11 +22,8 @@
     </head>
 
     <body>
-
-
-
-
-
+        
+        
         <nav class="indigo z-depth-2">
             <div class="nav-wrapper container">
                 <a href="./index.jsp" class="brand-logo">Foto.com</a>
@@ -117,26 +114,16 @@
 
         <!-- ONDE FICA AS IMAGENS SALVAS NO SERVIDOR -->
 
-
-        <div class="gg-box" id="showImagens" >
-
-            <%
-                ArrayList<Imagem> imagens = new ImagemDao().readImagens();
-                if (imagens == null) {
-                } else {
-
-                    for (Imagem imagem : imagens) {
-            %>
-            <div class="gg-element">
-                <a data-fancybox="gallery" href="img/<% out.print(imagem.getUrl()); %>" data-caption="<strong><% out.print(imagem.getTitulo()); %></strong><br><% out.print(imagem.getDescricao()); %> "><img
-                        src="img/<% out.print(imagem.getUrl()); %>" title="<% out.print(imagem.getTitulo()); %>"></a>
-            </div>
-            <%
-                    }
-                }
-            %>
+    
+        <div class="gg-box">
+            <c:forEach items="${imagens}" var="imagem">
+                <div class="gg-element">
+                    <a data-fancybox="gallery" href="img/${imagem.getUrl()}" data-caption="<strong>${imagem.getTitulo()}</strong><br> ${imagem.getDescricao()}">
+                        <img src="img/${imagem.getUrl()}" title="${imagem.getTitulo()}">
+                    </a>
+                </div>
+            </c:forEach>
         </div>
-
 
 
 
@@ -158,7 +145,7 @@
             </div>
             <div class="footer-copyright indigo darken-4">
                 <div class="container center-align">
-                    © 2018 Copyright UFSM
+                     Copyright UFSM
                 </div>
             </div>
         </footer>
@@ -186,7 +173,7 @@
             formulario.addEventListener("click", function () {
                 var imagens = document.getElementById("showImagens");
                 var nome = document.getElementById("nomeImagem");
-                
+
                 var resposta = buscarImagem(nome);
                 imagens.innerHTML = resposta;
             });
