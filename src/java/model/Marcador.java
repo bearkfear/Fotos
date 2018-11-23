@@ -15,7 +15,7 @@ public class Marcador {
 
     private int codigo;
     private String titulo;
-    private ArrayList<Associa> associacoes = new ArrayList<Associa>();
+    private ArrayList<Associa> associacoes = new ArrayList<>();
 
     public Marcador(int codigo, String titulo) {
         this.codigo = codigo;
