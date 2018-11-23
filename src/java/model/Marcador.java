@@ -15,7 +15,6 @@ public class Marcador {
 
     private int codigo;
     private String titulo;
-<<<<<<< HEAD
     private ArrayList<Associa> associacoes = new ArrayList<Associa>();
 
     public Marcador(int codigo, String titulo) {
@@ -25,13 +24,6 @@ public class Marcador {
 
     public Marcador() {
     }
-    
-    
-    
-=======
-    private ArrayList<Associa> associacoes;
-
->>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
     public int getCodigo() {
         return codigo;
     }

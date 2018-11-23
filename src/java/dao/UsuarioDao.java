@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dao;
 
 import java.sql.Connection;
@@ -14,13 +10,6 @@ import java.util.ArrayList;
 import model.Imagem;
 import model.Usuario;
 
-<<<<<<< HEAD
-=======
-/**
- *
- * @author campo
- */
->>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
 public class UsuarioDao {
 
     // create Read Update Delete
@@ -76,7 +65,6 @@ public class UsuarioDao {
 
             Usuario usuario = null;
             while (rs.next()) {
-<<<<<<< HEAD
                 usuario = new Usuario(
                         rs.getInt("codigo"), 
                         rs.getString("nome"), 
@@ -86,14 +74,7 @@ public class UsuarioDao {
                         rs.getString("img_url"));
             }
 
-            ArrayList<Imagem> imagens = new ImagemDao().readImagesFromUser( usuario.getCodigo() );
-=======
-                usuario = new Usuario(rs.getInt("codigo"), rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getString("sobre"), rs.getString("img_url"));
-            }
-
             ArrayList<Imagem> imagens = new ImagemDao().readImagesFromUser(usuario.getCodigo());
->>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
-
             usuario.setImagens(imagens);
             return usuario;
         } catch (SQLException e) {
