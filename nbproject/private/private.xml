@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/Documentos/NetBeansProjects/Fotos/src/java/dao/MarcadorDao.java</file>
+=======
+            <file>file:/D:/Documentos/NetBeansProjects/Fotos/src/java/controller/UploadServlet.java</file>
+>>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
         </group>
     </open-files>
 </project-private>

@@ -10,6 +10,7 @@ package model;
  * @author campo
  */
 public class Associa {
+<<<<<<< HEAD
     private int codigo;
     private Marcador marcador;
     private Imagem imagem;
@@ -26,6 +27,11 @@ public class Associa {
     }
     
     
+=======
+    private Marcador marcador;
+    private Imagem imagem;
+
+>>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
     public Marcador getMarcador() {
         return marcador;
     }
@@ -41,6 +47,7 @@ public class Associa {
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
     }
+<<<<<<< HEAD
     
     public int getCodigo () {
         return codigo;
@@ -49,5 +56,7 @@ public class Associa {
     public void setCodigo (int codigo) {
         this.codigo = codigo;
     }
+=======
+>>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
 
 }

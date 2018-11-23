@@ -29,7 +29,11 @@ public final class Imagem {
     private int codigo;
     private String url;
     private String descricao;
+<<<<<<< HEAD
     private ArrayList<Associa> associacoes= new ArrayList<Associa> ();
+=======
+    private ArrayList<Associa> associacoes;
+>>>>>>> c9fd1c3aad4f03433b9766bd570c4aa484c7b220
 
     
     
