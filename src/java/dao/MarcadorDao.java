@@ -90,14 +90,12 @@ public class MarcadorDao {
             public void accept(Marcador marcador) {
                 System.out.println("Marcaodor: " + marcador.getTitulo());
                 Marcador m = new MarcadorDao().read(marcador.getCodigo());
-                
-                
-                
+
                 ArrayList<Associa> a = m.getAssociacoes();
                 System.out.println("Sem associações?" + a.isEmpty());
-                
+
                 a.forEach(i -> {
-                    System.out.println("Codigo associação: " + i.getCodigo()); 
+                    System.out.println("Codigo associação: " + i.getCodigo());
                     System.out.println("Descricao da imagem: " + i.getImagem().getDescricao());
                     System.out.println("Titulo marcador: " + i.getMarcador().getTitulo());
                 });
