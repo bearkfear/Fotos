@@ -51,10 +51,7 @@ public class ImagemDao {
         Imagem imagem = readWithOutAssociation(codigo);
         imagem.setAssociacoes(new AssociaDao().readAssociationsFromImage(codigo));
         imagem.getAssociacoes().forEach(i -> i.setImagem(imagem));
-
-        if (imagem != null) {
-            return imagem;
-        }
+        
         return null;
     }
 
