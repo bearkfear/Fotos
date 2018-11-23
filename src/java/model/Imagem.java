@@ -29,7 +29,7 @@ public final class Imagem {
     private int codigo;
     private String url;
     private String descricao;
-    private ArrayList<Associa> associacoes;
+    private ArrayList<Associa> associacoes= new ArrayList<Associa> ();
 
     
     

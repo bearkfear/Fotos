@@ -17,19 +17,17 @@ import model.Imagem;
  * @author campo
  */
 public class ImagemDao {
-    
-    
-    
+
     public ArrayList<Imagem> readImagesFromUser(int codigo) {
-        
-        String sql = "SELECT * FROM imagem WHERE usuario_codigo = ?";
-        
+
+        String sql = "SELECT codigo, url, descricao FROM imagem WHERE usuario_codigo = ?";
+
         try (Connection con = new ConnectionFactory().getConexao()) {
-            
+
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, codigo);
             ResultSet rs = pre.executeQuery();
-            
+
             ArrayList<Imagem> imagens = new ArrayList();
             while (rs.next()) {
                 Imagem image = new Imagem();
@@ -37,18 +35,65 @@ public class ImagemDao {
                 image.setCodigo(rs.getInt("codigo"));
                 image.setDescricao(rs.getString("descricao"));
                 image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo()));
-                image.getAssociacoes().forEach(marcador -> marcador.setImagem(image));
+                image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
                 imagens.add(image);
             }
             return imagens;
-            
+
         } catch (SQLException e) {
-            
+
         }
-        
+
         return null;
     }
-    
-    
-    
+
+    public Imagem read(int codigo) {
+        Imagem imagem = readWithOutAssociation(codigo);
+        imagem.setAssociacoes(new AssociaDao().readAssociationsFromImage(codigo));
+        imagem.getAssociacoes().forEach(i -> i.setImagem(imagem));
+
+        if (imagem != null) {
+            return imagem;
+        }
+        return null;
+    }
+
+    private Imagem readWithOutAssociation(int codigo) {
+        String sql = "SELECT descricao, url FROM imagem WHERE codigo = ?";
+
+        try (Connection conexao = new ConnectionFactory().getConexao()) {
+
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            pre.setInt(1, codigo);
+
+            ResultSet resultado = pre.executeQuery();
+
+            Imagem imagem = null;
+
+            while (resultado.next()) {
+                imagem = new Imagem();
+                imagem.setUrl(resultado.getString("url"));
+                imagem.setCodigo(codigo);
+                imagem.setDescricao(resultado.getString("descricao"));
+            }
+
+            return imagem;
+
+        } catch (SQLException e) {
+
+        }
+
+        return null;
+    }
+
+    public Imagem readImageFromAssociation(int codigo) {
+        Imagem imagem = readWithOutAssociation(codigo);
+
+        if (imagem != null) {
+            return imagem;
+        }
+
+        return null;
+    }
+
 }

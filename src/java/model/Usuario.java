@@ -31,7 +31,7 @@ public final class Usuario {
     private String senha;
     private String sobre;
     private String urlImg;
-    private ArrayList<Imagem> imagens;
+    private ArrayList<Imagem> imagens = new ArrayList<>();
 
     /**
      * Define um usuario com as suas informaçóes carregadas do banco de dados.
