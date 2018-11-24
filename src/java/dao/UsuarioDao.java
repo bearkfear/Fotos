@@ -1,4 +1,3 @@
-
 package dao;
 
 import java.sql.Connection;
@@ -45,8 +44,7 @@ public class UsuarioDao {
 
         return null;
     }
-    
-    
+
     public Usuario readWithEmailAndPassword(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
@@ -61,18 +59,22 @@ public class UsuarioDao {
             Usuario usuario = null;
             while (rs.next()) {
                 usuario = new Usuario(
-                        rs.getInt("codigo"), 
-                        rs.getString("nome"), 
-                        rs.getString("email"), 
-                        rs.getString("senha"), 
-                        rs.getString("sobre"), 
+                        rs.getInt("codigo"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getString("sobre"),
                         rs.getString("img_url"));
             }
-            
-            ArrayList<Imagem> imagens;
-            imagens = new ImagemDao().readImagesFromUser(usuario.getCodigo(), conexao);
-            usuario.setImagens(imagens);
-            return usuario;
+
+            if (usuario != null) {
+
+                ArrayList<Imagem> imagens;
+                imagens = new ImagemDao().readImagesFromUser(usuario.getCodigo(), conexao);
+                usuario.setImagens(imagens);
+                return usuario;
+            }
+
         } catch (SQLException e) {
 
         }

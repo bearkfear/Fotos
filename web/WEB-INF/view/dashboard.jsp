@@ -4,6 +4,7 @@
     Author     : campo
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,23 +13,24 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Oi</h1>
-        
         <form action="./user" method="GET">
             <label>Pesquisar por uma imagem</label>
             <input type="text" name="value" />
             <button type="submit" name="action" value="find">Buscar</button>
         </form>
-        
-        
-        <ul>
-            <c:forEach items="${Fotos=Marcadores}" var="marcador" >
-                <li><a href="./user?action=marcador&value=${marcador.codigo}">${marcador.titulo}</a></li>
-            </c:forEach>
 
-        </ul>
 
-        
-        
+        <c:if test="${Fotos_Marcadores != null}">
+            <ul>
+                <c:forEach items="${Fotos_Marcadores}" var="marcador" >
+                    <li><a href="./user?action=marcador&value=${marcador.codigo}">${marcador.titulo}</a></li>
+                    </c:forEach>
+
+            </ul>
+        </c:if> 
+
+
+
+
     </body>
 </html>

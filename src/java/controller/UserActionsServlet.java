@@ -1,22 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.ImagemDao;
 import dao.MarcadorDao;
 import dao.UsuarioDao;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Imagem;
-import model.Marcador;
 import model.Usuario;
 
 /**
@@ -26,20 +18,16 @@ import model.Usuario;
 @WebServlet(name = "UserActionsServlet", urlPatterns = {"/user"})
 public class UserActionsServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        Usuario usuario = null;
-        usuario = (Usuario) request.getSession().getAttribute("Fotos=user");
-
-        if (usuario == null) {
-            response.sendRedirect(request.getContextPath() + "/");
+    private void verifySession(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (req.getSession().getAttribute("Fotos_User") == null) {
+            resp.sendRedirect(req.getContextPath() + "/");
         }
-
-        this.doGet(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        this.verifySession(req, resp);
 
         String option = null;
 
@@ -52,7 +40,9 @@ public class UserActionsServlet extends HttpServlet {
 
         switch (option) {
             case "dashboard": {
-                req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
+                
+                System.out.println("Entrou dashboard");
+                req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                 req.getRequestDispatcher("/WEB-INF/view/dashboard.jsp").forward(req, resp);
                 break;
             }
@@ -65,10 +55,10 @@ public class UserActionsServlet extends HttpServlet {
             case "find": {
 
                 try {
-                    req.setAttribute("Fotos=images", new ImagemDao().searchImagensDataBase(req.getParameter("value")));
-                    req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
+                    req.setAttribute("Fotos_Images", new ImagemDao().searchImagensDataBase(req.getParameter("value")));
+                    req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                     req.getRequestDispatcher("/WEB-INF/view/resultado.jsp").forward(req, resp);
-                } catch (Exception e) {
+                } catch (IOException | ServletException e) {
                 }
                 break;
             }
@@ -76,10 +66,10 @@ public class UserActionsServlet extends HttpServlet {
             case "marcador": {
                 try {
 
-                    req.setAttribute("Fotos=images", new MarcadorDao().readImagesFromMarcador(Integer.parseInt(req.getParameter("value"))));
-                    req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
+                    req.setAttribute("Fotos_Images", new MarcadorDao().readImagesFromMarcador(Integer.parseInt(req.getParameter("value"))));
+                    req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                     req.getRequestDispatcher("/WEB-INF/view/resultado.jsp").forward(req, resp);
-                } catch (Exception e) {
+                } catch (IOException | NumberFormatException | ServletException e) {
 
                 }
                 break;
@@ -105,10 +95,10 @@ public class UserActionsServlet extends HttpServlet {
                     Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos=user");
                     usuario.setNome(nome);
                     usuario.setSobre(sobre);
-                    
-                    req.getSession().setAttribute("Fotos=user", usuario);
+
+                    req.getSession().setAttribute("Fotos_User", usuario);
                     req.getRequestDispatcher("/WEB-INF/view/perfil.jsp").forward(req, resp);
-                    
+
                 } catch (Exception e) {
 
                 }
@@ -117,7 +107,7 @@ public class UserActionsServlet extends HttpServlet {
             }
 
             default: {
-                req.getRequestDispatcher("/user?action=dashboard").forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
             }
         }
 
