@@ -1,7 +1,8 @@
 ## Programação Orientada A Objetos Para Web.
 
 Cadeira cursada na UNIVERSIDADE FEDERAL DE SANTA MARIA [(UFSM)](https://www.ufsm.br/ "(UFSM)")
-Lessionada pelo professor** Alencar Machado** no Curso de Sistemas para Internet [(CSI)](http://csi.ufsm.br/ "CSI")
+
+Lessionada pelo professor **Alencar Machado** no Curso de Sistemas para Internet [(CSI)](http://csi.ufsm.br/ "CSI")
 
 ### Projeto: 
 
