@@ -45,13 +45,8 @@ public class UsuarioDao {
 
         return null;
     }
-
-    /**
-     *
-     * @param email
-     * @param senha
-     * @return
-     */
+    
+    
     public Usuario readWithEmailAndPassword(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
