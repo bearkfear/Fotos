@@ -1,4 +1,3 @@
-
 package dao;
 
 import java.sql.Connection;
@@ -8,14 +7,11 @@ import java.sql.SQLException;
 
 import java.sql.Statement;
 
-
 import java.util.ArrayList;
 import model.Associa;
 import model.Marcador;
 
 public class AssociaDao {
-
-    
 
     public Associa create(Associa associa) {
         String sql = "INSERT INTO associa (codigo_imagem, codigo_marcador) VALUES (?, ?)";
@@ -32,13 +28,13 @@ public class AssociaDao {
         return null;
     }
 
-    public ArrayList<Associa> readAssociationsFromImage(int codigo) {
+    public ArrayList<Associa> readAssociationsFromImage(int codigo, Connection conexao) {
 
         String sql = "SELECT * FROM associa WHERE codigo_imagem = ?";
 
-        try (Connection con = new ConnectionFactory().getConexao()) {
+        try {
 
-            PreparedStatement pre = con.prepareStatement(sql);
+            PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setInt(1, codigo);
 
             ResultSet rs = pre.executeQuery();
@@ -48,9 +44,9 @@ public class AssociaDao {
             while (rs.next()) {
                 Associa associa = new Associa();
                 associa.setCodigo(rs.getInt("codigo"));
-                associa.setMarcador(new MarcadorDao().readFromAssociation(rs.getInt("codigo_marcador")));
+                associa.setMarcador(new MarcadorDao().readFromAssociation(rs.getInt("codigo_marcador"), conexao));
                 associacoes.add(associa);
-                
+
             }
 
             return associacoes;
@@ -59,11 +55,11 @@ public class AssociaDao {
         return null;
     }
 
-    public ArrayList<Associa> readAssociationsFromMarcador(Marcador marcador) {
+    public ArrayList<Associa> readAssociationsFromMarcador(Marcador marcador, Connection conexao) {
 
         String sql = "SELECT * FROM associa WHERE codigo_marcador = ?";
 
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
+        try {
             PreparedStatement pre = conexao.prepareStatement(sql);
 
             pre.setInt(1, marcador.getCodigo());
@@ -74,7 +70,7 @@ public class AssociaDao {
                 Associa associacao = new Associa(
                         resultado.getInt("codigo"),
                         marcador,
-                        new ImagemDao().readImageFromAssociation(resultado.getInt("codigo_imagem")));
+                        new ImagemDao().readImageFromAssociation(resultado.getInt("codigo_imagem"), conexao));
                 associacoes.add(associacao);
             }
 
@@ -101,8 +97,5 @@ public class AssociaDao {
         }
         return false;
     }
-    
-    
-    
-   
+
 }

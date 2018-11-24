@@ -39,16 +39,16 @@ public class MarcadorDao {
         return null;
     }
 
-    public Marcador readFromAssociation(int codigo) {
-        return readWithOutAssociation(codigo);
+    public Marcador readFromAssociation(int codigo, Connection conexao) {
+        return readWithOutAssociation(codigo, conexao);
     }
 
-    private Marcador readWithOutAssociation(int codigo) {
+    private Marcador readWithOutAssociation(int codigo, Connection conexao) {
         String sql = "SELECT * FROM marcador WHERE codigo = ?";
 
-        try (Connection conn = new ConnectionFactory().getConexao()) {
+        try {
 
-            PreparedStatement pre = conn.prepareStatement(sql);
+            PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setInt(1, codigo);
             ResultSet rs = pre.executeQuery();
 
@@ -69,12 +69,36 @@ public class MarcadorDao {
         return null;
     }
 
+    /**
+     * Le um marcador do banco de dados.
+     *
+     * Ao ler o marcador do banco de dados retorna também suas associações, e
+     * imagens envolvidas.
+     *
+     * @param codigo
+     * @return
+     */
     public Marcador read(int codigo) {
-        Marcador marcador = readWithOutAssociation(codigo);
-        marcador.setAssociacoes(new AssociaDao().readAssociationsFromMarcador(marcador));
-        return marcador;
+
+        try (Connection conexao = new ConnectionFactory().getConexao()) {
+            Marcador marcador = readWithOutAssociation(codigo, conexao);
+            marcador.setAssociacoes(new AssociaDao().readAssociationsFromMarcador(marcador, conexao));
+            return marcador;
+
+        } catch (SQLException e) {
+
+        }
+        return null;
     }
 
+    /**
+     * Busca todos os marcadores no banco de dados.
+     *
+     * Retorna todos os marcadores porem sem suas associações com imagem e
+     * associa
+     *
+     * @return ArrayList<Marcador> marcadores;
+     */
     public ArrayList<Marcador> readAll() {
         String sql = "SELECT * FROM marcador";
 

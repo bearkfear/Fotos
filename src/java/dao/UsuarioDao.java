@@ -50,9 +50,9 @@ public class UsuarioDao {
     public Usuario readWithEmailAndPassword(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
-        try (Connection con = new ConnectionFactory().getConexao()) {
+        try (Connection conexao = new ConnectionFactory().getConexao()) {
 
-            PreparedStatement pre = con.prepareStatement(sql);
+            PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setString(1, email);
             pre.setString(2, senha);
 
@@ -68,8 +68,9 @@ public class UsuarioDao {
                         rs.getString("sobre"), 
                         rs.getString("img_url"));
             }
-
-            ArrayList<Imagem> imagens = new ImagemDao().readImagesFromUser(usuario.getCodigo());
+            
+            ArrayList<Imagem> imagens;
+            imagens = new ImagemDao().readImagesFromUser(usuario.getCodigo(), conexao);
             usuario.setImagens(imagens);
             return usuario;
         } catch (SQLException e) {
