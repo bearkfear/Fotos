@@ -13,6 +13,41 @@ import model.Imagem;
  */
 public class ImagemDao {
 
+    public ArrayList<Imagem> searchImagensDataBase(String descricao) {
+
+        String sql = "SELECT * FROM imagem WHERE imagem.descricao like '%?%';";
+
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            pre.setString(1, descricao);
+            ResultSet resultado = pre.executeQuery();
+
+            ArrayList<Imagem> imagens = new ArrayList<>();
+
+            while (resultado.next()) {
+                Imagem image = new Imagem();
+
+                image.setCodigo(resultado.getInt("codigo"));
+                image.setDescricao(resultado.getString("descricao"));
+                image.setUrl(resultado.getString("url"));
+
+                image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo(), conexao));
+                image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
+                imagens.add(image);
+
+            }
+            
+            return imagens;
+
+        } catch (SQLException e) {
+
+        }
+
+        return null;
+
+    }
+
     public ArrayList<Imagem> readImagesFromUser(int codigo, Connection conexao) {
 
         String sql = "SELECT codigo, url, descricao FROM imagem WHERE usuario_codigo = ?";
@@ -44,7 +79,7 @@ public class ImagemDao {
 
     public Imagem read(int codigo) {
 
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
             Imagem imagem = readWithOutAssociation(codigo, conexao);
             imagem.setAssociacoes(new AssociaDao().readAssociationsFromImage(codigo, conexao));
             imagem.getAssociacoes().forEach(i -> i.setImagem(imagem));

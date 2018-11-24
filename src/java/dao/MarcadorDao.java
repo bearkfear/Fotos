@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import model.Imagem;
 import model.Marcador;
 
 /**
@@ -18,7 +19,7 @@ public class MarcadorDao {
 
         String sql = "INSERT INTO marcador (titulo) VALUES (?)";
 
-        try (Connection conn = new ConnectionFactory().getConexao()) {
+        try (Connection conn = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pre.setString(1, marcador.getTitulo());
@@ -70,6 +71,51 @@ public class MarcadorDao {
     }
 
     /**
+     * Leia imagens de um marcador do banco de dados.
+     * 
+     * Metodo que retorna todas as imagens associadas a um marcador. 
+     * @param codigoMarcador
+     * @return ArrayList<Imagens>
+     */
+    
+    
+    public ArrayList<Imagem> readImagesFromMarcador (int codigoMarcador) {
+        
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+            
+            String sql = "select imagem.codigo, imagem.descricao, imagem.url from imagem, associa where codigo_imagem = imagem.codigo and codigo_marcador = ?;";
+            
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            pre.setInt(1, codigoMarcador);
+            
+            ResultSet resultado = pre.executeQuery();
+            
+            ArrayList<Imagem> imagens = new ArrayList();
+            
+            while (resultado.next()) {
+                Imagem image;
+                image = new Imagem(resultado.getInt("codigo"), resultado.getString("url"), resultado.getString("descricao"));
+                image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo(), conexao));
+                image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
+                imagens.add(image);
+            }
+            
+            return imagens;
+            
+            
+            
+        } catch (SQLException e) {
+            
+            
+            
+        }
+        return null;
+    }
+    
+    
+    
+    
+    /**
      * Le um marcador do banco de dados.
      *
      * Ao ler o marcador do banco de dados retorna também suas associações, e
@@ -78,9 +124,12 @@ public class MarcadorDao {
      * @param codigo
      * @return
      */
+    
+    
+    
     public Marcador read(int codigo) {
 
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
             Marcador marcador = readWithOutAssociation(codigo, conexao);
             marcador.setAssociacoes(new AssociaDao().readAssociationsFromMarcador(marcador, conexao));
             return marcador;
@@ -102,7 +151,7 @@ public class MarcadorDao {
     public ArrayList<Marcador> readAll() {
         String sql = "SELECT * FROM marcador";
 
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conexao.prepareStatement(sql);
             ResultSet resultado = pre.executeQuery();
@@ -127,7 +176,7 @@ public class MarcadorDao {
 
         String sql = "delete from marcador WHERE codigo = ?";
 
-        try (Connection conn = new ConnectionFactory().getConexao()) {
+        try (Connection conn = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conn.prepareStatement(sql);
             pre.setInt(1, marcador.getCodigo());

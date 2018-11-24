@@ -2,19 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-/*
-
-
-  CREATE TABLE Usuario
-    (
-        codigo SERIAL PRIMARY KEY,
-        nome VARCHAR,
-        email VARCHAR UNIQUE,
-        senha VARCHAR,
-        sobre VARCHAR
-    );
-
- */
 /**
  *
  * Classe Usuario, contem os metodos e atributos aplicaveis a um usuario. Um

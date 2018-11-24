@@ -16,7 +16,7 @@ public class AssociaDao {
     public Associa create(Associa associa) {
         String sql = "INSERT INTO associa (codigo_imagem, codigo_marcador) VALUES (?, ?)";
 
-        try (Connection conn = new ConnectionFactory().getConexao()) {
+        try (Connection conn = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pre.setInt(1, associa.getImagem().getCodigo());
@@ -86,7 +86,7 @@ public class AssociaDao {
     public boolean delete(Associa associa) {
         String sql = "DELETE FROM associa WHERE codigo = ?";
 
-        try (Connection conn = new ConnectionFactory().getConexao()) {
+        try (Connection conn = new ConnectionFactory().getConnection()) {
             PreparedStatement pre = conn.prepareStatement(sql);
             pre.setInt(1, associa.getCodigo());
             if (pre.executeUpdate() != 0) {

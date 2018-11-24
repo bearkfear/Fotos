@@ -23,7 +23,7 @@ public class ConnectionFactory {
      * 
      * @return Connection
      */
-    public Connection getConexao() {
+    public Connection getConnection() {
         Connection conexao = null;
 
         try {

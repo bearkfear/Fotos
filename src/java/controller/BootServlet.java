@@ -21,9 +21,8 @@ public class BootServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
-        req.getRequestDispatcher("inicio.jsp").forward(req, resp);  
+        req.getRequestDispatcher("pesquisar.jsp").forward(req, resp);  
     }
 
 }

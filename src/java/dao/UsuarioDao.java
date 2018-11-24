@@ -17,7 +17,7 @@ public class UsuarioDao {
 
         String SQL = "INSERT INTO usuario(nome, email, senha, sobre, img_url)";
 
-        try (Connection con = new ConnectionFactory().getConexao()) {
+        try (Connection con = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             pre.setString(1, usuario.getNome());
@@ -50,7 +50,7 @@ public class UsuarioDao {
     public Usuario readWithEmailAndPassword(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setString(1, email);
@@ -84,21 +84,19 @@ public class UsuarioDao {
      * método é capaz de atualizar informações que estão no banco de dados, não
      * lida com as imagens do mesmo.
      *
-     * @param usuario
+     * @param nome
+     * @param sobre
      * @return true ou false
      */
-    public boolean update(Usuario usuario) {
+    public boolean update(String nome, String sobre) {
 
-        try (Connection conexao = new ConnectionFactory().getConexao()) {
-            String sql = "UPDATE usuario SET nome = ?, senha = ?, sobre = ?, img_url = ? WHERE usuario.codigo = ?";
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+            String sql = "UPDATE usuario SET nome = ?, sobre = ? WHERE usuario.codigo = ?";
             PreparedStatement pre = conexao.prepareStatement(sql);
-            pre.setString(1, usuario.getNome());
-            pre.setString(2, usuario.getSenha());
-            pre.setString(3, usuario.getSobre());
-            pre.setString(4, usuario.getUrlImg());
-
+            pre.setString(1, nome);
+            pre.setString(2, sobre);
             if (pre.executeUpdate() != 0) {
-                return false;
+                return true;
             }
 
         } catch (SQLException e) {

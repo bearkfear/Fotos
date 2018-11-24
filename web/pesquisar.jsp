@@ -13,7 +13,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-
+        <a href="./pages/login.jsp">Entrar</a>
+        <a href="./pages/register.jsp">Registrar-se</a>
+        
 
         <form method="POST" action="find">
             <label>Pesquisar por imagem</label>
