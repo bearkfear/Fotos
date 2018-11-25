@@ -12,11 +12,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author campo
  */
-@WebServlet(name = "index", urlPatterns = {"/"})
+@WebServlet(name = "index", urlPatterns = {"/index.jsp"})
 public class BootServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.doGet(request, response);
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        
+        req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
+        req.getRequestDispatcher("pesquisar.jsp").forward(req, resp);
+        //this.doGet(req, resp);
     }
 
     @Override
