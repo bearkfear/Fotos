@@ -14,7 +14,7 @@ public class UsuarioDao {
     // create Read Update Delete
     public Usuario create(Usuario usuario) {
 
-        String SQL = "INSERT INTO usuario(nome, email, senha, sobre, img_url)";
+        String SQL = "INSERT INTO usuario(nome, email, senha, sobre, img_url) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection con = new ConnectionFactory().getConnection()) {
 

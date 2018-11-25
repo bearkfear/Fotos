@@ -48,7 +48,7 @@ public class LoginRegisterServlet extends HttpServlet {
 
         switch (req.getParameter("option")) {
             case "login": {
-                System.out.println("Entrou em login");
+                
                 try {
 
                     if (new Autentication(req.getParameter("email"), req.getParameter("password")).autenticate()) {

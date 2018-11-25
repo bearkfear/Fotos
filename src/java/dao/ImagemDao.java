@@ -15,12 +15,13 @@ public class ImagemDao {
 
     public ArrayList<Imagem> searchImagensDataBase(String descricao) {
 
-        String sql = "SELECT * FROM imagem WHERE imagem.descricao like '%?%';";
-
+        
+        
+        String sql = "SELECT codigo, descricao, url FROM imagem WHERE descricao LIKE '%" + descricao + "%'";
         try (Connection conexao = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conexao.prepareStatement(sql);
-            pre.setString(1, descricao);
+            //pre.setString(1, descricao);
             ResultSet resultado = pre.executeQuery();
 
             ArrayList<Imagem> imagens = new ArrayList<>();
@@ -32,12 +33,14 @@ public class ImagemDao {
                 image.setDescricao(resultado.getString("descricao"));
                 image.setUrl(resultado.getString("url"));
 
+               
+                
                 image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo(), conexao));
                 image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
                 imagens.add(image);
 
             }
-            
+
             return imagens;
 
         } catch (SQLException e) {
@@ -47,6 +50,7 @@ public class ImagemDao {
         return null;
 
     }
+
 
     public ArrayList<Imagem> readImagesFromUser(int codigo, Connection conexao) {
 

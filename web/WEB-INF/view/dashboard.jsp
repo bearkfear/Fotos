@@ -10,9 +10,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>DASHBOARD</title>
     </head>
     <body>
+        
+        ${sessionScope['Fotos_User'].nome} <br>
+        <a href="./user?action=perfil">Visualizar perfil</a>
+        <a href="./user?action=logoff">Sair</a>
+        
+        
+        
+        <h1>DASHBOARD</h1>
+        
         <form action="./user" method="GET">
             <label>Pesquisar por uma imagem</label>
             <input type="text" name="value" />
@@ -23,7 +32,7 @@
         <c:if test="${Fotos_Marcadores != null}">
             <ul>
                 <c:forEach items="${Fotos_Marcadores}" var="marcador" >
-                    <li><a href="./user?action=marcador&value=${marcador.codigo}">${marcador.titulo}</a></li>
+                    <li><a href="./user?action=marcador&value=${marcador.codigo}">#${marcador.titulo}</a></li>
                     </c:forEach>
 
             </ul>

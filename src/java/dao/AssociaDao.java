@@ -50,6 +50,8 @@ public class AssociaDao {
             }
 
             return associacoes;
+            
+            
         } catch (SQLException e) {
         }
         return null;

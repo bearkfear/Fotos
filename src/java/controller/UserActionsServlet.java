@@ -4,11 +4,13 @@ import dao.ImagemDao;
 import dao.MarcadorDao;
 import dao.UsuarioDao;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Imagem;
 import model.Usuario;
 
 /**
@@ -40,7 +42,7 @@ public class UserActionsServlet extends HttpServlet {
 
         switch (option) {
             case "dashboard": {
-                
+
                 System.out.println("Entrou dashboard");
                 req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                 req.getRequestDispatcher("/WEB-INF/view/dashboard.jsp").forward(req, resp);
@@ -55,10 +57,13 @@ public class UserActionsServlet extends HttpServlet {
             case "find": {
 
                 try {
-                    req.setAttribute("Fotos_Images", new ImagemDao().searchImagensDataBase(req.getParameter("value")));
+                    ArrayList<Imagem> imagens = new ImagemDao().searchImagensDataBase(req.getParameter("value"));
+
+                    req.setAttribute("correspondence", req.getParameter("value"));
+                    req.setAttribute("Fotos_Images", imagens.isEmpty() == true ? null : imagens);
                     req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                     req.getRequestDispatcher("/WEB-INF/view/resultado.jsp").forward(req, resp);
-                } catch (IOException | ServletException e) {
+                } catch (IOException e) {
                 }
                 break;
             }
@@ -66,7 +71,10 @@ public class UserActionsServlet extends HttpServlet {
             case "marcador": {
                 try {
 
-                    req.setAttribute("Fotos_Images", new MarcadorDao().readImagesFromMarcador(Integer.parseInt(req.getParameter("value"))));
+                    ArrayList<Imagem> imagens = new MarcadorDao().readImagesFromMarcador(Integer.parseInt(req.getParameter("value")));
+
+                    req.setAttribute("correspondence", null);
+                    req.setAttribute("Fotos_Images", imagens.isEmpty() == true ? null : imagens);
                     req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                     req.getRequestDispatcher("/WEB-INF/view/resultado.jsp").forward(req, resp);
                 } catch (IOException | NumberFormatException | ServletException e) {
@@ -76,6 +84,7 @@ public class UserActionsServlet extends HttpServlet {
             }
 
             case "perfil": {
+
                 req.getRequestDispatcher("/WEB-INF/view/perfil.jsp").forward(req, resp);
                 break;
             }
@@ -87,6 +96,35 @@ public class UserActionsServlet extends HttpServlet {
             }
 
             case "updateInformations": {
+
+                break;
+            }
+
+            default: {
+                resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
+            }
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        verifySession(req, resp);
+
+        String option = null;
+
+        try {
+
+            option = req.getParameter("option");
+            
+            
+        } catch (Exception e) {
+
+        }
+        switch (option) {
+
+            case "update": {
 
                 try {
                     String nome = req.getParameter("name");
@@ -103,14 +141,9 @@ public class UserActionsServlet extends HttpServlet {
 
                 }
 
-                break;
             }
 
-            default: {
-                resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
-            }
         }
-
     }
 
 }
