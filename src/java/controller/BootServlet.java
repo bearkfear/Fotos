@@ -19,6 +19,10 @@ public class BootServlet extends HttpServlet {
         this.doGet(req, resp);
     }
 
+    
+    
+    
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
