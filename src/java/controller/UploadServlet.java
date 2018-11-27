@@ -32,7 +32,7 @@ public class UploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Usuario u = (Usuario) req.getSession().getAttribute("usuarioLogado");
+        Usuario u = (Usuario) req.getSession().getAttribute("Fotos_User");
 
         try {
 
@@ -58,6 +58,7 @@ public class UploadServlet extends HttpServlet {
 
             ImagemDao imagemDao = new ImagemDao();
             String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
+            Imagem imagem = new Imagem();
             while (iter.hasNext()) {
                 FileItem item = iter.next();
 
@@ -65,23 +66,27 @@ public class UploadServlet extends HttpServlet {
                 String url = String.valueOf(System.currentTimeMillis()) + item.getName().substring(item.getName().lastIndexOf("."), item.getName().length());
 
                 // salvar informações no banco
-                Imagem imagem = new Imagem();
                 imagem.setDescricao(item.getName());
                 imagem.setUrl(url);
-                //imagemDao.create(imagem, u.getCodigo());
+                imagem = imagemDao.create(imagem, u.getCodigo());
 
                 // cria um arquivo com local, nome e a extensao do arquivo
                 File f = new File(caminho + url);
                 // grava o arquivo na pasta;
                 item.write(f);
             }
-            
-            // redireciona 
-            resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
+
+            if (imagem != null) {
+                req.setAttribute("imagem", imagem);
+                req.getRequestDispatcher("/WEB-INF/view/editImage.jsp").forward(req, resp);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
+
+            }
 
         } catch (Exception e) {
             System.out.println("Deu nul pointer exception");
-            resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
+            resp.sendRedirect(req.getContextPath() + "./user?action=dashboard");
 
             //redireciona o usuario
         }

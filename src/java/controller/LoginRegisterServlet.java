@@ -48,22 +48,25 @@ public class LoginRegisterServlet extends HttpServlet {
 
         switch (req.getParameter("option")) {
             case "login": {
-                
+
                 try {
 
                     if (new Autentication(req.getParameter("email"), req.getParameter("password")).autenticate()) {
                         resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
 
                     } else {
-                        // redireciona pagina de login informando problema na autenticação;
+                        // redireciona pagina de login informando problema na autenticação
+                        req.setAttribute("path", "true");
                         req.setAttribute("infoAutenticate", true);
                         req.getRequestDispatcher("./pages/login.jsp").forward(req, resp);
                     }
 
                 } catch (IOException | ServletException e) {
+                    req.setAttribute("path", "true");
                     req.setAttribute("infoAutenticate", true);
                     req.getRequestDispatcher("./pages/login.jsp").forward(req, resp);
                 }
+                req.setAttribute("path", "true");
                 req.setAttribute("infoAutenticate", true);
                 req.getRequestDispatcher("./pages/login.jsp").forward(req, resp);
 
@@ -81,11 +84,13 @@ public class LoginRegisterServlet extends HttpServlet {
                             resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
 
                         } else {
+                            req.setAttribute("path", "true");
                             req.setAttribute("infoAutenticate", true);
                             req.getRequestDispatcher("./pages/login.jsp").forward(req, resp);
                         }
 
                     } else {
+                        req.setAttribute("path", "true");
                         req.setAttribute("infoRegister", true);
                         req.getRequestDispatcher("./pages/register.jsp").forward(req, resp);
                     }
@@ -93,13 +98,13 @@ public class LoginRegisterServlet extends HttpServlet {
                 } catch (IOException | ServletException e) {
 
                 }
-
+                req.setAttribute("path", "true");
                 req.setAttribute("infoRegister", true);
                 req.getRequestDispatcher("./pages/register.jsp").forward(req, resp);
             }
             default: {
                 resp.sendRedirect(req.getContextPath() + "/");
-                        
+
             }
         }
 

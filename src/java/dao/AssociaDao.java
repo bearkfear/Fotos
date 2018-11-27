@@ -13,19 +13,25 @@ import model.Marcador;
 
 public class AssociaDao {
 
-    public Associa create(Associa associa) {
+    public int create(int codigoImagem, int codigoMarcador) {
         String sql = "INSERT INTO associa (codigo_imagem, codigo_marcador) VALUES (?, ?)";
 
         try (Connection conn = new ConnectionFactory().getConnection()) {
 
             PreparedStatement pre = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pre.setInt(1, associa.getImagem().getCodigo());
-            pre.setInt(2, associa.getMarcador().getCodigo());
+            pre.setInt(1, codigoImagem);
+            pre.setInt(2, codigoMarcador);
+            pre.executeUpdate();
+            
+            ResultSet rs = pre.getGeneratedKeys();
+            rs.next();
+            return rs.getInt("codigo");
+            
 
         } catch (SQLException e) {
             System.out.println(e);
         }
-        return null;
+        return 0;
     }
 
     public ArrayList<Associa> readAssociationsFromImage(int codigo, Connection conexao) {

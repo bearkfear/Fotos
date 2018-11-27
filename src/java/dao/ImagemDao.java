@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import model.Imagem;
 
@@ -13,10 +14,57 @@ import model.Imagem;
  */
 public class ImagemDao {
 
+    public Imagem create(Imagem imagem, int codigo) {
+
+        String sql = "Insert into imagem(descricao, url, usuario_codigo) VALUES (?, ?, ?)";
+
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+
+            PreparedStatement pre = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pre.setString(1, imagem.getDescricao());
+            pre.setString(2, imagem.getUrl());
+            pre.setInt(3, codigo);
+
+            pre.executeUpdate();
+            ResultSet rs = pre.getGeneratedKeys();
+
+            while (rs.next()) {
+                imagem.setCodigo(rs.getInt("codigo"));
+            }
+
+            if (imagem.getCodigo() != 0) {
+                return imagem;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+
+    public boolean update(int codigo, String nome) {
+
+        String sql = "Update imagem SET descricao = '" + nome + "' WHERE codigo = ?";
+
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            pre.setInt(1, codigo);
+            
+            if (pre.executeUpdate() != 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("");
+        }
+
+        return false;
+    }
+
     public ArrayList<Imagem> searchImagensDataBase(String descricao) {
 
-        
-        
         String sql = "SELECT codigo, descricao, url FROM imagem WHERE descricao LIKE '%" + descricao + "%'";
         try (Connection conexao = new ConnectionFactory().getConnection()) {
 
@@ -33,8 +81,6 @@ public class ImagemDao {
                 image.setDescricao(resultado.getString("descricao"));
                 image.setUrl(resultado.getString("url"));
 
-               
-                
                 image.setAssociacoes(new AssociaDao().readAssociationsFromImage(image.getCodigo(), conexao));
                 image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
                 imagens.add(image);
@@ -50,7 +96,6 @@ public class ImagemDao {
         return null;
 
     }
-
 
     public ArrayList<Imagem> readImagesFromUser(int codigo, Connection conexao) {
 

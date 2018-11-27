@@ -95,8 +95,10 @@ public class UserActionsServlet extends HttpServlet {
                 break;
             }
 
-            case "updateInformations": {
+            case "upload": {
 
+                req.getRequestDispatcher("/WEB-INF/view/uploadImagem.jsp").forward(req, resp);
+                
                 break;
             }
 

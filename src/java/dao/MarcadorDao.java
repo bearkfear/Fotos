@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import model.Associa;
 import model.Imagem;
 import model.Marcador;
 
@@ -15,6 +16,38 @@ import model.Marcador;
  */
 public class MarcadorDao {
 
+    public boolean addMarcadorImagem (String marcador, int codigoImagem, String nomeImagem) {
+        
+        String sql = "SELECT * FROM marcador where titulo = ?";
+        
+        try (Connection conexao = new ConnectionFactory().getConnection()) {
+            
+            PreparedStatement pre = conexao.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            
+            boolean entrou = false;
+            while (rs.next()) {
+                entrou = true;
+                int codigo = rs.getInt("codigo");
+                new AssociaDao().create(codigoImagem, codigo);
+            }
+            
+            if (!entrou) {
+                Marcador mark = new Marcador();
+                mark.setTitulo(marcador);
+                new AssociaDao().create(codigoImagem, this.create(mark).getCodigo());
+            }
+            
+        } catch (SQLException e) {
+            
+        }
+        
+        
+        
+        return false;
+    }
+    
+    
     public Marcador create(Marcador marcador) {
 
         String sql = "INSERT INTO marcador (titulo) VALUES (?)";

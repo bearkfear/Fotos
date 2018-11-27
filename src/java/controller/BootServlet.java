@@ -16,15 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 public class BootServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
-        req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
-        req.getRequestDispatcher("pesquisar.jsp").forward(req, resp);
-        //this.doGet(req, resp);
+        this.doGet(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("Fotos=Marcadores", new MarcadorDao().readAll());
+        req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
         req.getRequestDispatcher("pesquisar.jsp").forward(req, resp);  
     }
 
