@@ -43,7 +43,6 @@ public class UserActionsServlet extends HttpServlet {
         switch (option) {
             case "dashboard": {
 
-                System.out.println("Entrou dashboard");
                 req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
                 req.getRequestDispatcher("/WEB-INF/view/dashboard.jsp").forward(req, resp);
                 break;
@@ -89,16 +88,8 @@ public class UserActionsServlet extends HttpServlet {
                 break;
             }
 
-            case "removeImage": {
-                // remover imagem do banco de dados;
-
-                break;
-            }
-
             case "upload": {
-
                 req.getRequestDispatcher("/WEB-INF/view/uploadImagem.jsp").forward(req, resp);
-                
                 break;
             }
 
