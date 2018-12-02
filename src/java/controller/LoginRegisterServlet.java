@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.UsuarioDao;
@@ -15,27 +10,51 @@ import javax.servlet.http.HttpServletResponse;
 import model.Usuario;
 
 /**
+ * Classe responsável pelo login e cadastro dos usuários. As requisições de um
+ * usuário para login ou para registrar são encaminhadas para essa servlet
  *
  * @author campo
  */
 @WebServlet(urlPatterns = "/RegisterAndLogin")
 public class LoginRegisterServlet extends HttpServlet {
 
+    /**
+     * MÉTODO IRÁ LIDAR COM TODAS REQUISIÇÕES POST. MÉTODO UTILIZA REESCRITA
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        System.out.println("Entrou no doPOST");
-
+        /**
+         * CLASSE INTERNA. FEITA PARA REUSO DE CÓDIGO E FACILITAMENTO DAS AÇÕES
+         */
         class Autentication {
 
             private String email;
             private String password;
 
+            /**
+             * CONTRUTOR RESPONSÁVEL POR RECEBER AS INFORMAÇÕES DO USUÁRIO COMO
+             * EMAIL E SENHA
+             *
+             * @param email
+             * @param password
+             */
             public Autentication(String email, String password) {
                 this.email = email;
                 this.password = password;
             }
 
+            /**
+             * MÉTODO QUE AUTENTICA O USUARIO NO SISTEMA, CASO NÃO CONSIRA
+             * EFEUTAR A ATUENTICAÇÃO, ELE RETORNA FALSE
+             *
+             * @return
+             */
             public boolean autenticate() {
                 Usuario u = new UsuarioDao().readWithEmailAndPassword(this.email, this.password);
                 if (u != null) {

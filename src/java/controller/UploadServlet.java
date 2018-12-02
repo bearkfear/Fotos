@@ -27,6 +27,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(urlPatterns = "/img")
 public class UploadServlet extends HttpServlet {
 
+    /**
+     * Esse metodo realiza as configurações iniciais para ser possível o upload
+     * das imagens com segurança
+     *
+     * @param req
+     * @return upload
+     */
     private ServletFileUpload inicializaConfiguracoes(HttpServletRequest req) {
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
@@ -58,6 +65,16 @@ public class UploadServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Metodo que manipula imagens separadamente
+     *
+     * @param imagem
+     * @param caminho
+     * @param item
+     * @param usuario
+     * @return imagem
+     * @throws Exception
+     */
     private Imagem manipulaImagem(Imagem imagem, String caminho, FileItem item, Usuario usuario) throws Exception {
 
         /**
@@ -85,6 +102,15 @@ public class UploadServlet extends HttpServlet {
         return imagem;
     }
 
+    /**
+     * Metodo que irá ter o controle de todas as imagens
+     *
+     * @param upload
+     * @param req
+     * @param resp
+     * @param usuario
+     * @return imagem
+     */
     private Imagem manipulaImagens(ServletFileUpload upload, HttpServletRequest req, HttpServletResponse resp, Usuario usuario) {
         /*
         
@@ -112,6 +138,14 @@ public class UploadServlet extends HttpServlet {
         return null;
     }
 
+    /**
+     * Metodo que lida com as requisições para upload de imagem
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos_User");

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import model.Imagem;
 
 /**
+ * ESSA CLASSE É RESPONSAVEL PELO RETORNO DE UMA SOLICITAÇÃO DE UMA BUSCA OU DE
+ * UM MARCADOR EM ESPECÍFICO.
  *
  * @author campo
  */

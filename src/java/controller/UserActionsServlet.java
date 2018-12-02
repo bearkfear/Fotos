@@ -15,15 +15,37 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * ESSA CLASSE RESUME TODAS AS AÇÕES DE UM USUÁRIO EXCETO O UPLOAD DE IMAGEM.
+ * Qualquer ação que o usuário desejar tomar, será por meio dessa classe.
+ *
+ * @author campo
+ */
 @WebServlet(name = "UserActionsServlet", urlPatterns = {"/user"})
 public class UserActionsServlet extends HttpServlet {
 
+    /**
+     * Esse método vai verificar se realmente existe um usuário logado, se não
+     * existir manda pra pagina inicial deslogado
+     *
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     private void verifySession(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (req.getSession().getAttribute("Fotos_User") == null) {
             resp.sendRedirect(req.getContextPath() + "/");
         }
     }
 
+    /**
+     * RESPONDE AS REQUISIÇÕES GET
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -135,9 +157,6 @@ public class UserActionsServlet extends HttpServlet {
                         System.out.println("Deu null nos marcadores já existentes" + e);
                     }
 
-                    System.out.println("Codigo da imagem: " + codigoImagem);
-                    System.out.println("Nome da imagem: " + nomeImagem);
-
                     // atualiza as informações da imagem pelo código;
                     new ImagemDao().update(codigoImagem, nomeImagem);
 
@@ -169,6 +188,8 @@ public class UserActionsServlet extends HttpServlet {
 
                 } catch (IOException | NumberFormatException e) {
                     System.out.println(e);
+                    resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
+
                 }
                 break;
             }

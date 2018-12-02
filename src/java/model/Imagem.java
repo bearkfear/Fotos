@@ -2,20 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-/*
- CREATE TABLE Imagem
-    (
-        codigo SERIAL PRIMARY KEY,
-        titulo VARCHAR,
-        descricao VARCHAR,
-        numeroAcessos INTEGER,
-        usuario_codigo INTEGER,
-        url VARCHAR,
-        FOREIGN KEY (usuario_codigo) REFERENCES usuario(codigo)
-    );
-
-  
- */
 /**
  *
  * Classe Imagem representa as cada imagem que o sistema suportará. Somente um

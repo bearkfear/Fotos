@@ -11,11 +11,18 @@ import model.Marcador;
 
 /**
  *
+ * CLASSE RESPONSÁVEL PELA MANIPULAÇÃO DE TODOS OS MARCADORES NO SISTEMA
  * @author campo
  */
 public class MarcadorDao {
 
- 
+ /**
+  * MÉTODO RESPONSÁVEL PELA CRIAÇÃO DE UM MARCADOR NO SISTEMA.
+  * Ao ser feito o upload de uma imagem é possível criar marcadores de forma dinãmica para o projeto
+  * Então é feito um array de marcadores e enviado junto a solicitação do servidor
+  * @param marcador
+  * @return 
+  */
 
     public Marcador create(Marcador marcador) {
 

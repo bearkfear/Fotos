@@ -83,65 +83,10 @@ public final class Usuario {
         this.urlImg = url;
     }
 
-    /**
-     * Retorna a url da imagem do usuario. Utilizada em todas as imaginas que o
-     * mesmo estiver logado
-     *
-     * @return url
-     */
     public String getUrlImg() {
         return this.urlImg;
     }
-
-    /**
-     * Adiciona uma imagem a um usuario específico. Ao ser feito o upload de uma
-     * ou várias imagens pelo usuário. O sistema adiciona todas uma de cada vez
-     * a uma lista de imagens. Esse método é utilizado para adicinar as imagens
-     * a lista.
-     *
-     * @param imagem
-     */
-    public void adicionarImagem(Imagem imagem) {
-        if (imagens == null) {
-            this.imagens = new ArrayList<Imagem>();
-
-            this.imagens.add(imagem);
-        } else {
-
-            this.imagens.add(imagem);
-        }
-    }
-
-    /**
-     * Remove uma imagem da lista de imagens do usuário.
-     *
-     * @param imagem
-     */
-    public void removerImagem(Imagem imagem) {
-        this.imagens.remove(imagem);
-
-    }
-
-    /**
-     * Retorna a quantidade de imagens de um usuario. Ao utilizar o metodo é é
-     * retornado um inteiro do número de imagens que tem na lista do usuario
-     *
-     * @return quantidade
-     */
-    public int quantidadeImagens() {
-        return this.imagens.size();
-    }
-
-    /**
-     * Retorna uma imagem pela sua posição
-     *
-     * @param posicao
-     * @return
-     */
-    public Imagem getImagem(int posicao) {
-        return this.imagens.get(posicao);
-    }
-
+    
     /**
      * Retorna o codigo do usuario
      *

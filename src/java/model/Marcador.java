@@ -1,13 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.util.ArrayList;
 
 /**
+ * ESSA CLASSE É A MODELAGEM DE UM MARCADOR QUE ESTÁ REPRESENTADO NO SISTEMA. UM
+ * MARCADOR PODE TER VÁRIAS ASSOCIAÇÕES COM IMAGENS, E UMA IMAGEM PODE TER
+ * VÁRIAS ASSOCIAÇÕES COM UM MARCADOR.
  *
  * @author campo
  */
@@ -25,8 +23,10 @@ public class Marcador {
     public Marcador(String titulo) {
         this.titulo = titulo;
     }
+
     public Marcador() {
     }
+
     public int getCodigo() {
         return codigo;
     }
