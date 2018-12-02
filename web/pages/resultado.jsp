@@ -35,7 +35,7 @@
                         <ul class="breadcrumb">
 
                             <c:forEach items="${Fotos_Marcadores}" var="marcador" >
-                                <li class="breadcrumb-item"><a href="./find?action=marcador&value=${marcador.codigo}">${marcador.titulo}</a></li>
+                                <li class="breadcrumb-item"><a href="./find?action=marcador&value=${marcador.codigo}">#${marcador.titulo}</a></li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -79,7 +79,7 @@
                             <div class="row">
                                 <div class="">
                                     <div class="card"> 
-                                        <img class="card-img-top" src="./img/${image.url}" alt="<c:out value="${image.descricao}"/>">
+                                        <img class="card-img-top" src="./assets/img/${image.url}" alt="<c:out value="${image.descricao}"/>">
                                         <div class="card-body">
                                             <h4 class="card-title"><c:out value="${image.descricao}"/></h4>
                                             <c:if test="${image.associacoes != null}">

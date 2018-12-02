@@ -40,7 +40,7 @@
                         <ul class="breadcrumb">
 
                             <c:forEach items="${Fotos_Marcadores}" var="marcador" >
-                                <li class="breadcrumb-item"><a href="./find?action=marcador&value=${marcador.codigo}">${marcador.titulo}</a></li>
+                                <li class="breadcrumb-item"><a href="./find?action=marcador&value=${marcador.codigo}">#${marcador.titulo}</a></li>
                                 </c:forEach>
 
                         </ul>

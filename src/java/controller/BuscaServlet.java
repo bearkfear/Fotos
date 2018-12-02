@@ -54,7 +54,7 @@ public class BuscaServlet extends HttpServlet {
                     req.setAttribute("correspondence", req.getParameter("value"));
                     req.setAttribute("Fotos_Images", imagens.isEmpty() == true ? null : imagens);
                     req.setAttribute("Fotos_Marcadores", new MarcadorDao().readAll());
-                    req.getRequestDispatcher("/WEB-INF/view/resultado.jsp").forward(req, resp);
+                    req.getRequestDispatcher("/pages/resultado.jsp").forward(req, resp);
                 } catch (IOException e) {
                 }
                 break;
