@@ -25,7 +25,7 @@ public class BootServlet extends HttpServlet {
      * METODO SERÁ ENCARREGADO DE RESPONDER A REQUISIÇÃO E, A PARTIR DELE OUTRO
      * MÉTODO REESCRITO )GET) É INVOCADO, EFETUANDO AÇÕES
      *
-     * @param req
+     * @param req 
      * @param resp
      * @throws ServletException
      * @throws IOException
