@@ -1,5 +1,9 @@
 package controller;
 
+import model.Imagem;
+import model.Marcador;
+import model.Usuario;
+import dao.AssociaDao;
 import dao.ImagemDao;
 import dao.MarcadorDao;
 import dao.UsuarioDao;
@@ -10,13 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Imagem;
-import model.Usuario;
 
-/**
- *
- * @author campo
- */
+
 @WebServlet(name = "UserActionsServlet", urlPatterns = {"/user"})
 public class UserActionsServlet extends HttpServlet {
 
@@ -104,19 +103,12 @@ public class UserActionsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         verifySession(req, resp);
-
         String option = null;
-
         try {
-
             option = req.getParameter("option");
-            
-            
         } catch (Exception e) {
-
         }
         switch (option) {
-
             case "update": {
 
                 try {
@@ -135,8 +127,67 @@ public class UserActionsServlet extends HttpServlet {
                 }
 
             }
+            case "adicionarMarcador": {
+
+                /*
+                Processa informações requisitadas pelo cliente a respeito de uma imagem em questão;
+                 */
+                try {
+
+                    int codigoImagem = Integer.parseInt(req.getParameter("codigoImagem"));
+                    String nomeImagem = req.getParameter("nomeImagem");
+                    String[] novosMarcadores = req.getParameterValues("novosMarcadores");
+                    ArrayList<Marcador> marcadores = converteMarcadores(req.getParameterValues("marcadores"));
+
+                    // atualiza as informações da imagem pelo código;
+                    new ImagemDao().update(codigoImagem, nomeImagem);
+
+                    // Processa os novos marcadores que a imagem tem.
+                    for (String marcador : novosMarcadores) {
+
+                        Marcador m = new MarcadorDao().create(new Marcador(marcador));
+                        if (m.getCodigo() != 0) {
+                            new AssociaDao().create(codigoImagem, m.getCodigo());
+                        }
+                    }
+
+                    // Cria associações entre os marcadores que já existem e a nova imagem
+                    marcadores.forEach(m -> {
+                        new AssociaDao().create(codigoImagem, m.getCodigo());
+                    });
+
+                    // Atualiza as informações do usuário
+                    Usuario userAccount = (Usuario) req.getSession().getAttribute("Fotos_User");
+                    req.getSession().setAttribute("Fotos_User", new UsuarioDao().readWithEmailAndPassword(userAccount.getEmail(), userAccount.getSenha()));
+                    resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                break;
+            }
 
         }
+    }
+
+    /**
+     * Converte todos os marcadores enviados por parametro em forma de array,
+     * agora em ArrayList de Marcador.
+     *
+     * @param marcadores
+     * @return ArrayList<Marcador> m
+     */
+    private ArrayList<Marcador> converteMarcadores(String[] marcadores) {
+
+        ArrayList<Marcador> m = new ArrayList();
+
+        for (String marcador : marcadores) {
+            Marcador mark = new Marcador();
+            mark.setCodigo(Integer.parseInt(marcador));
+            m.add(mark);
+        }
+
+        return m;
     }
 
 }

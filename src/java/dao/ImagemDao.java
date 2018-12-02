@@ -57,7 +57,7 @@ public class ImagemDao {
             }
 
         } catch (SQLException e) {
-            System.out.println("");
+            System.out.println(e);
         }
 
         return false;

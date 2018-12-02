@@ -1,6 +1,7 @@
 package controller;
 
 import dao.ImagemDao;
+import dao.MarcadorDao;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -17,10 +18,15 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-
-
+/**
+ * Classe responsável por receber as imagens enviadas pelo cliente ao servidor.
+ * A classe tem dependências: biblioteca commonsFileUpload e io.
+ *
+ * @author campo
+ */
 @WebServlet(urlPatterns = "/img")
 public class UploadServlet extends HttpServlet {
+
     private ServletFileUpload inicializaConfiguracoes(HttpServletRequest req) {
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
@@ -40,17 +46,18 @@ public class UploadServlet extends HttpServlet {
 
         return upload;
     }
+
     private void redireciona(HttpServletRequest req, HttpServletResponse resp, Imagem imagem) throws ServletException, IOException {
 
-      
         if (imagem != null) {
+            req.setAttribute("marcadores", new MarcadorDao().readAll());
             req.setAttribute("imagem", imagem);
             req.getRequestDispatcher("/WEB-INF/view/editImage.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
-
         }
     }
+
     private Imagem manipulaImagem(Imagem imagem, String caminho, FileItem item, Usuario usuario) throws Exception {
 
         /**
@@ -77,9 +84,14 @@ public class UploadServlet extends HttpServlet {
 
         return imagem;
     }
-    private void manipulaImagens(ServletFileUpload upload, HttpServletRequest req, HttpServletResponse resp, Usuario usuario) {
-        /*Caminho a ser utilizado para salvar as imagens enviadas ao servidor*/
-        String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
+
+    private Imagem manipulaImagens(ServletFileUpload upload, HttpServletRequest req, HttpServletResponse resp, Usuario usuario) {
+        /*
+        
+        Caminho a ser utilizado para salvar as imagens enviadas ao servidor.
+        O caminho a ser utilizado pode ser abstrato ou absoluto. Mas é necessário utilizar o caminho do serividir (wildfly/standalone/nomeDoProjeto/assets/files/);
+         */
+        String urlAbsoluta = "C:\\wildfly-14.0.1.Final\\wildfly-14.0.1.Final\\standalone\\deployments\\Fotos.war\\assets\\img\\";
         /*
         O processamento está sendo definido para o processamento de apenas uma imagem
         Caso seja necessidade de salvar multiplas imagens ou arquivos. Utilize um ArrayList    
@@ -91,16 +103,18 @@ public class UploadServlet extends HttpServlet {
             FileItem item;
             while (iterador.hasNext()) {
                 item = iterador.next();
-                imagem = manipulaImagem(imagem, caminho, item, usuario);
+                imagem = manipulaImagem(imagem, urlAbsoluta, item, usuario);
             }
-            redireciona(req, resp, imagem);
-        } catch (Exception e) {            
+            return imagem;
+        } catch (Exception e) {
             // todas as exceções levantadas serão tratadas aqui!
         }
+        return null;
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos_User");
-        manipulaImagens(inicializaConfiguracoes(req), req, resp, usuario);
+        redireciona(req, resp, manipulaImagens(inicializaConfiguracoes(req), req, resp, usuario));
     }
 }

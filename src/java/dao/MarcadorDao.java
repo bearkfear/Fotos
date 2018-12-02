@@ -16,45 +16,15 @@ import model.Marcador;
  */
 public class MarcadorDao {
 
-    public boolean addMarcadorImagem (String marcador, int codigoImagem, String nomeImagem) {
-        
-        String sql = "SELECT * FROM marcador where titulo = ?";
-        
-        try (Connection conexao = new ConnectionFactory().getConnection()) {
-            
-            PreparedStatement pre = conexao.prepareStatement(sql);
-            ResultSet rs = pre.executeQuery();
-            
-            boolean entrou = false;
-            while (rs.next()) {
-                entrou = true;
-                int codigo = rs.getInt("codigo");
-                new AssociaDao().create(codigoImagem, codigo);
-            }
-            
-            if (!entrou) {
-                Marcador mark = new Marcador();
-                mark.setTitulo(marcador);
-                new AssociaDao().create(codigoImagem, this.create(mark).getCodigo());
-            }
-            
-        } catch (SQLException e) {
-            
-        }
-        
-        
-        
-        return false;
-    }
-    
-    
+ 
+
     public Marcador create(Marcador marcador) {
 
         String sql = "INSERT INTO marcador (titulo) VALUES (?)";
 
-        try (Connection conn = new ConnectionFactory().getConnection()) {
+        try (Connection conexao = new ConnectionFactory().getConnection()){
 
-            PreparedStatement pre = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pre = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pre.setString(1, marcador.getTitulo());
             pre.executeUpdate();
             ResultSet rs = pre.getGeneratedKeys();
@@ -105,26 +75,25 @@ public class MarcadorDao {
 
     /**
      * Leia imagens de um marcador do banco de dados.
-     * 
-     * Metodo que retorna todas as imagens associadas a um marcador. 
+     *
+     * Metodo que retorna todas as imagens associadas a um marcador.
+     *
      * @param codigoMarcador
      * @return ArrayList<Imagens>
      */
-    
-    
-    public ArrayList<Imagem> readImagesFromMarcador (int codigoMarcador) {
-        
+    public ArrayList<Imagem> readImagesFromMarcador(int codigoMarcador) {
+
         try (Connection conexao = new ConnectionFactory().getConnection()) {
-            
+
             String sql = "select imagem.codigo, imagem.descricao, imagem.url from imagem, associa where codigo_imagem = imagem.codigo and codigo_marcador = ?;";
-            
+
             PreparedStatement pre = conexao.prepareStatement(sql);
             pre.setInt(1, codigoMarcador);
-            
+
             ResultSet resultado = pre.executeQuery();
-            
+
             ArrayList<Imagem> imagens = new ArrayList();
-            
+
             while (resultado.next()) {
                 Imagem image;
                 image = new Imagem(resultado.getInt("codigo"), resultado.getString("url"), resultado.getString("descricao"));
@@ -132,22 +101,15 @@ public class MarcadorDao {
                 image.getAssociacoes().forEach(associacao -> associacao.setImagem(image));
                 imagens.add(image);
             }
-            
+
             return imagens;
-            
-            
-            
+
         } catch (SQLException e) {
-            
-            
-            
+
         }
         return null;
     }
-    
-    
-    
-    
+
     /**
      * Le um marcador do banco de dados.
      *
@@ -157,9 +119,6 @@ public class MarcadorDao {
      * @param codigo
      * @return
      */
-    
-    
-    
     public Marcador read(int codigo) {
 
         try (Connection conexao = new ConnectionFactory().getConnection()) {

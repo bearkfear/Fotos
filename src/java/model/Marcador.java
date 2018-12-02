@@ -22,6 +22,9 @@ public class Marcador {
         this.titulo = titulo;
     }
 
+    public Marcador(String titulo) {
+        this.titulo = titulo;
+    }
     public Marcador() {
     }
     public int getCodigo() {
