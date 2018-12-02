@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import model.Associa;
 import model.Imagem;
 import model.Marcador;
 
@@ -110,27 +109,7 @@ public class MarcadorDao {
         return null;
     }
 
-    /**
-     * Le um marcador do banco de dados.
-     *
-     * Ao ler o marcador do banco de dados retorna também suas associações, e
-     * imagens envolvidas.
-     *
-     * @param codigo
-     * @return
-     */
-    public Marcador read(int codigo) {
 
-        try (Connection conexao = new ConnectionFactory().getConnection()) {
-            Marcador marcador = readWithOutAssociation(codigo, conexao);
-            marcador.setAssociacoes(new AssociaDao().readAssociationsFromMarcador(marcador, conexao));
-            return marcador;
-
-        } catch (SQLException e) {
-
-        }
-        return null;
-    }
 
     /**
      * Busca todos os marcadores no banco de dados.
@@ -138,7 +117,7 @@ public class MarcadorDao {
      * Retorna todos os marcadores porem sem suas associações com imagem e
      * associa
      *
-     * @return ArrayList<Marcador> marcadores;
+     * @return  marcadores;
      */
     public ArrayList<Marcador> readAll() {
         String sql = "SELECT * FROM marcador";
@@ -161,21 +140,6 @@ public class MarcadorDao {
 
         }
         return null;
-    }
-
-    /*Revisar metodo */
-    public boolean delete(Marcador marcador) {
-
-        String sql = "delete from marcador WHERE codigo = ?";
-
-        try (Connection conn = new ConnectionFactory().getConnection()) {
-
-            PreparedStatement pre = conn.prepareStatement(sql);
-            pre.setInt(1, marcador.getCodigo());
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
     }
 
 }

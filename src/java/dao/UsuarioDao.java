@@ -9,9 +9,20 @@ import java.util.ArrayList;
 import model.Imagem;
 import model.Usuario;
 
+/**
+ * CLASSE RESPONSÁVEL PELA MANIPULAÇÃO DAS INFORMAÇÕES DOS USUÁRIOS NO BANCO DE DADOS.
+ * @author campo
+ */
+
 public class UsuarioDao {
 
-    // create Read Update Delete
+    
+    /**
+     * MÉTODO RESPONSAVEL PELA INSERÇÃO DE UM USUÁRO NO SISTEMA.
+     * Ao usuário efetura seu registro via formulário, um controller o encaminhará para cá, criando o mesmo no sistema
+     * @param usuario
+     * @return novoUsuario
+     */
     public Usuario create(Usuario usuario) {
 
         String SQL = "INSERT INTO usuario(nome, email, senha, sobre, img_url) VALUES (?, ?, ?, ?, ?);";
@@ -45,6 +56,14 @@ public class UsuarioDao {
         return null;
     }
 
+    /**
+     * MÉTODO RESPONSÁVEL PELO LOGIN DE UM USUÁRIO NO SISTEMA E ATUALIZAÇÃO DE TODAS AS INFORMAÇÕES DELE.
+     * Ao usuário faz login o sistema, esse método será invocado podendo retornar null ou o objeto do usuário junto de todas as suas informações
+     * @param email
+     * @param senha
+     * @return usuarioLogado
+     */
+    
     public Usuario readWithEmailAndPassword(String email, String senha) {
 
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
@@ -76,36 +95,8 @@ public class UsuarioDao {
             }
 
         } catch (SQLException e) {
-
+            System.out.println(e);
         }
         return null;
     }
-
-    /**
-     * Atualiza as informações de um usuario de acordo com o seu codigo. O
-     * método é capaz de atualizar informações que estão no banco de dados, não
-     * lida com as imagens do mesmo.
-     *
-     * @param nome
-     * @param sobre
-     * @return true ou false
-     */
-    public boolean update(String nome, String sobre) {
-
-        try (Connection conexao = new ConnectionFactory().getConnection()) {
-            String sql = "UPDATE usuario SET nome = ?, sobre = ? WHERE usuario.codigo = ?";
-            PreparedStatement pre = conexao.prepareStatement(sql);
-            pre.setString(1, nome);
-            pre.setString(2, sobre);
-            if (pre.executeUpdate() != 0) {
-                return true;
-            }
-
-        } catch (SQLException e) {
-
-        }
-
-        return false;
-    }
-
 }

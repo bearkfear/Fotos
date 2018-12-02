@@ -9,11 +9,21 @@ import java.util.ArrayList;
 import model.Imagem;
 
 /**
- *
+ *CLASSE RESPONÁVEL PELA MANIPULAÇÃO DAS IMAGENS NO BANCO DE DADOS, TODAS INFORMAÇÕES SOBRE AS IMAGENS SÃO SALVAR NO BANCO DE DADOS
  * @author campo
  */
 public class ImagemDao {
 
+    
+    /**
+     * CRIA UMA IMAGEM NO BANCO DE DADOS
+     * .
+     * A criação de uma imagem no sistema depende de um usuário, então é passado junto o código do usuário por parâmetro
+     * @param imagem
+     * @param codigo
+     * @return imagem
+     */
+    
     public Imagem create(Imagem imagem, int codigo) {
 
         String sql = "INSERT INTO imagem (descricao, url, usuario_codigo) VALUES (?, ?, ?)";
@@ -43,6 +53,14 @@ public class ImagemDao {
         return null;
     }
 
+    /**
+     * ATUALIZA AS INFORMAÇÕES DE UMA IMAGEM ESPECÍFICA NO BANCO DE DADOs.
+     * Ao ser feito o upload de uma imagem no servidor, o banco de dados é encarregador de atualizar o nome da mesma
+     * @param codigo
+     * @param nome
+     * @return true or false
+     */
+    
     public boolean update(int codigo, String nome) {
 
         String sql = "Update imagem SET descricao = '" + nome + "' WHERE codigo = ?";
@@ -63,6 +81,13 @@ public class ImagemDao {
         return false;
     }
 
+    
+    /**
+     * ESSE MÉTODO BUSCA NO BANCO DE DADOS DE FORMA GLOBAL AS IMAGENS QUE ESTÃO SALVAS NELE.
+     * Para que a busca possa ser possível é necessário que as imagens sejam públicas
+     * @param descricao
+     * @return todasImagensBuscadas
+     */
     public ArrayList<Imagem> searchImagensDataBase(String descricao) {
 
         String sql = "SELECT codigo, descricao, url FROM imagem WHERE descricao LIKE '%" + descricao + "%'";
@@ -97,6 +122,14 @@ public class ImagemDao {
 
     }
 
+    
+    /**
+     * MÉTODO QUE FAZ A LEITURA DAS IMAGENS DE UM USUÁRIO.
+     * esse método sempre é invocado por outro método na classe usuário
+     * @param codigo
+     * @param conexao
+     * @return imagens
+     */
     public ArrayList<Imagem> readImagesFromUser(int codigo, Connection conexao) {
 
         String sql = "SELECT codigo, url, descricao FROM imagem WHERE usuario_codigo = ?";
@@ -126,20 +159,14 @@ public class ImagemDao {
         return null;
     }
 
-    public Imagem read(int codigo) {
-
-        try (Connection conexao = new ConnectionFactory().getConnection()) {
-            Imagem imagem = readWithOutAssociation(codigo, conexao);
-            imagem.setAssociacoes(new AssociaDao().readAssociationsFromImage(codigo, conexao));
-            imagem.getAssociacoes().forEach(i -> i.setImagem(imagem));
-
-        } catch (SQLException e) {
-
-        }
-
-        return null;
-    }
-
+    /**
+     * Le uma imagem sem sua associação.
+     * Esse método sempre é chamado pro outro método, que compartilha sua conexao.
+     * @param codigo
+     * @param conexao
+     * @return imagem
+     */
+    
     private Imagem readWithOutAssociation(int codigo, Connection conexao) {
         String sql = "SELECT descricao, url FROM imagem WHERE codigo = ?";
 
@@ -168,6 +195,14 @@ public class ImagemDao {
         return null;
     }
 
+    /**
+     * Método que le as imagens sem suas associações.
+     * Esse método sempre é invocado por outro metodo que compartilha sua conexao
+     * @param codigo
+     * @param conexao
+     * @return 
+     */
+    
     public Imagem readImageFromAssociation(int codigo, Connection conexao) {
         Imagem imagem = readWithOutAssociation(codigo, conexao);
 

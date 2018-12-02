@@ -107,7 +107,7 @@
                             <div class="row">
                                 <div class="">
                                     <div class="card"> 
-                                        <img class="card-img-top" src="./img/${image.url}" alt="<c:out value="${image.descricao}"/>">
+                                        <img class="card-img-top" src="./assets/img/${image.url}" alt="<c:out value="${image.descricao}"/>">
                                         <div class="card-body">
                                             <h4 class="card-title"><c:out value="${image.descricao}"/></h4>
                                             <c:if test="${image.associacoes != null}">

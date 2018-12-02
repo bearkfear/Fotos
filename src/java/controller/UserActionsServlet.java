@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @WebServlet(name = "UserActionsServlet", urlPatterns = {"/user"})
 public class UserActionsServlet extends HttpServlet {
 
@@ -109,26 +108,9 @@ public class UserActionsServlet extends HttpServlet {
         } catch (Exception e) {
         }
         switch (option) {
-            case "update": {
+            case "processaDetalhesImagem": {
 
-                try {
-                    String nome = req.getParameter("name");
-                    String sobre = req.getParameter("about");
-                    new UsuarioDao().update(nome, sobre);
-                    Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos=user");
-                    usuario.setNome(nome);
-                    usuario.setSobre(sobre);
-
-                    req.getSession().setAttribute("Fotos_User", usuario);
-                    req.getRequestDispatcher("/WEB-INF/view/perfil.jsp").forward(req, resp);
-
-                } catch (Exception e) {
-
-                }
-
-            }
-            case "adicionarMarcador": {
-
+                System.out.println("Entrou no processa detalhes imagem");
                 /*
                 Processa informações requisitadas pelo cliente a respeito de uma imagem em questão;
                  */
@@ -136,34 +118,63 @@ public class UserActionsServlet extends HttpServlet {
 
                     int codigoImagem = Integer.parseInt(req.getParameter("codigoImagem"));
                     String nomeImagem = req.getParameter("nomeImagem");
-                    String[] novosMarcadores = req.getParameterValues("novosMarcadores");
-                    ArrayList<Marcador> marcadores = converteMarcadores(req.getParameterValues("marcadores"));
+
+                    String[] novosMarcadores = null;
+
+                    try {
+                        novosMarcadores = req.getParameterValues("newMarcador");
+                    } catch (NullPointerException e) {
+                        System.out.println("Deu null nos novos marcadores" + e);
+                    }
+
+                    ArrayList<Marcador> marcadores = new ArrayList();
+
+                    try {
+                        marcadores = converteMarcadores(req.getParameterValues("marcador"));
+                    } catch (NullPointerException e) {
+                        System.out.println("Deu null nos marcadores já existentes" + e);
+                    }
+
+                    System.out.println("Codigo da imagem: " + codigoImagem);
+                    System.out.println("Nome da imagem: " + nomeImagem);
 
                     // atualiza as informações da imagem pelo código;
                     new ImagemDao().update(codigoImagem, nomeImagem);
 
-                    // Processa os novos marcadores que a imagem tem.
-                    for (String marcador : novosMarcadores) {
-
-                        Marcador m = new MarcadorDao().create(new Marcador(marcador));
-                        if (m.getCodigo() != 0) {
-                            new AssociaDao().create(codigoImagem, m.getCodigo());
+                    if (novosMarcadores != null) {
+                        // Processa os novos marcadores que a imagem tem.
+                        for (String marcador : novosMarcadores) {
+                            System.out.println("Nome dos novos marcadores: " + marcador);
+                            Marcador m = new MarcadorDao().create(new Marcador(marcador));
+                            if (m.getCodigo() != 0) {
+                                new AssociaDao().create(codigoImagem, m.getCodigo());
+                            }
                         }
                     }
 
-                    // Cria associações entre os marcadores que já existem e a nova imagem
-                    marcadores.forEach(m -> {
-                        new AssociaDao().create(codigoImagem, m.getCodigo());
-                    });
+                    if (!marcadores.isEmpty()) {
+
+                        // Cria associações entre os marcadores que já existem e a nova imagem
+                        marcadores.forEach(m -> {
+                            System.out.println("Codigo dos marcadores já existentes: " + m.getCodigo());
+                            new AssociaDao().create(codigoImagem, m.getCodigo());
+                        });
+
+                    }
 
                     // Atualiza as informações do usuário
                     Usuario userAccount = (Usuario) req.getSession().getAttribute("Fotos_User");
                     req.getSession().setAttribute("Fotos_User", new UsuarioDao().readWithEmailAndPassword(userAccount.getEmail(), userAccount.getSenha()));
                     resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
 
-                } catch (Exception e) {
+                } catch (IOException | NumberFormatException e) {
                     System.out.println(e);
                 }
+                break;
+            }
+            default: {
+
+                resp.sendRedirect(req.getContextPath() + "/user?action=dashboard");
                 break;
             }
 
