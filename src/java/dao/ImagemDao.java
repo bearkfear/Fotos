@@ -16,7 +16,7 @@ public class ImagemDao {
 
     public Imagem create(Imagem imagem, int codigo) {
 
-        String sql = "Insert into imagem(descricao, url, usuario_codigo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO imagem (descricao, url, usuario_codigo) VALUES (?, ?, ?)";
 
         try (Connection conexao = new ConnectionFactory().getConnection()) {
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.ImagemDao;
@@ -22,13 +17,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-/**
- *
- * @author Enrico
- */
+
+
 @WebServlet(urlPatterns = "/img")
 public class UploadServlet extends HttpServlet {
-
     private ServletFileUpload inicializaConfiguracoes(HttpServletRequest req) {
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
@@ -48,11 +40,17 @@ public class UploadServlet extends HttpServlet {
 
         return upload;
     }
+    private void redireciona(HttpServletRequest req, HttpServletResponse resp, Imagem imagem) throws ServletException, IOException {
 
-    private void redireciona(HttpServletRequest req, HttpServletResponse resp) {
+      
+        if (imagem != null) {
+            req.setAttribute("imagem", imagem);
+            req.getRequestDispatcher("/WEB-INF/view/editImage.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
 
+        }
     }
-
     private Imagem manipulaImagem(Imagem imagem, String caminho, FileItem item, Usuario usuario) throws Exception {
 
         /**
@@ -79,16 +77,13 @@ public class UploadServlet extends HttpServlet {
 
         return imagem;
     }
-
     private void manipulaImagens(ServletFileUpload upload, HttpServletRequest req, HttpServletResponse resp, Usuario usuario) {
-        
-        /*Caminho a ser utilizado para salvar as imagens enviadas ao servidor*/ 
+        /*Caminho a ser utilizado para salvar as imagens enviadas ao servidor*/
         String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
-        
         /*
         O processamento está sendo definido para o processamento de apenas uma imagem
         Caso seja necessidade de salvar multiplas imagens ou arquivos. Utilize um ArrayList    
-        */
+         */
         Imagem imagem = new Imagem();
         try {
             List<FileItem> arquivos = upload.parseRequest(req);
@@ -98,25 +93,14 @@ public class UploadServlet extends HttpServlet {
                 item = iterador.next();
                 imagem = manipulaImagem(imagem, caminho, item, usuario);
             }
-
-            if (imagem != null) {
-                req.setAttribute("imagem", imagem);
-                req.getRequestDispatcher("/WEB-INF/view/editImage.jsp").forward(req, resp);
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/pages/dashboard.jsp");
-
-            }
-
-        } catch (Exception e) {
+            redireciona(req, resp, imagem);
+        } catch (Exception e) {            
+            // todas as exceções levantadas serão tratadas aqui!
         }
-
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos_User");
         manipulaImagens(inicializaConfiguracoes(req), req, resp, usuario);
-
     }
 }
