@@ -29,51 +29,74 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(urlPatterns = "/img")
 public class UploadServlet extends HttpServlet {
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private ServletFileUpload inicializaConfiguracoes(HttpServletRequest req) {
 
-        Usuario u = (Usuario) req.getSession().getAttribute("Fotos_User");
+        boolean isMultipart = ServletFileUpload.isMultipartContent(req);
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletContext servletContext = this.getServletConfig().getServletContext();
+        File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+        factory.setRepository(repository);
+        ServletFileUpload upload = new ServletFileUpload(factory);
 
+        /*
+        É possível definir o tamanho dos arquivos e da requisição pelos métodos da classe ServletFileUpload.
+        Defini-os em que, qualquer valor será aceito, porém, é altamente recomendado que defina um valor dependendo das configurações do servidor.
+        Utilizar tipo long  
+         */
+        upload.setSizeMax(Long.MAX_VALUE);
+        upload.setFileSizeMax(Long.MAX_VALUE);
+
+        return upload;
+    }
+
+    private void redireciona(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private Imagem manipulaImagem(Imagem imagem, String caminho, FileItem item, Usuario usuario) throws Exception {
+
+        /**
+         * Url da imagem. Busca o tempo do sistema em MiliSegundos e salva como
+         * nome da imagem, assim nunca haverá nomes repetidos, também é feita a
+         * busca da extensão da imagem para salvar após o nome definido
+         */
+        String url;
+        url = String.valueOf(
+                System.currentTimeMillis())
+                + item.getName().substring(
+                        item.getName().lastIndexOf("."),
+                        item.getName().length()
+                );
+
+        /*As informações originais da imagem carregada são salvas no banco de dados, juntamente com o código do dono da imagem.*/
+        imagem.setDescricao(item.getName());
+        imagem.setUrl(url);
+        imagem = new ImagemDao().create(imagem, usuario.getCodigo());
+
+        /*Cria e salva um arquivo na pasta do servidor definida pela string 'caminho'*/
+        File f = new File(caminho + url);
+        item.write(f);
+
+        return imagem;
+    }
+
+    private void manipulaImagens(ServletFileUpload upload, HttpServletRequest req, HttpServletResponse resp, Usuario usuario) {
+        
+        /*Caminho a ser utilizado para salvar as imagens enviadas ao servidor*/ 
+        String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
+        
+        /*
+        O processamento está sendo definido para o processamento de apenas uma imagem
+        Caso seja necessidade de salvar multiplas imagens ou arquivos. Utilize um ArrayList    
+        */
+        Imagem imagem = new Imagem();
         try {
-
-            // Verifique se temos uma solicitação de upload de arquivo
-            boolean isMultipart = ServletFileUpload.isMultipartContent(req);
-
-            // Criar uma fábrica para itens de arquivo baseados em disco
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-
-            //Configurar um repositório (para garantir que um local temporário seguro seja usado)
-            ServletContext servletContext = this.getServletConfig().getServletContext();
-            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            factory.setRepository(repository);
-            //Criar um novo manipulador de upload de arquivos
-            ServletFileUpload upload = new ServletFileUpload(factory);
-
-            upload.setSizeMax(Long.MAX_VALUE);
-            upload.setFileSizeMax(Long.MAX_VALUE);
-            // Analise o pedido
-            List<FileItem> multifiles = upload.parseRequest(req);
-
-            Iterator<FileItem> iter = multifiles.iterator();
-
-            ImagemDao imagemDao = new ImagemDao();
-            String caminho = "D:/Documentos/NetBeansProjects/Fotos/web/img/";
-            Imagem imagem = new Imagem();
-            while (iter.hasNext()) {
-                FileItem item = iter.next();
-
-                // pega o tempo do sistema em miliseconds e a extensao da imagem
-                String url = String.valueOf(System.currentTimeMillis()) + item.getName().substring(item.getName().lastIndexOf("."), item.getName().length());
-
-                // salvar informações no banco
-                imagem.setDescricao(item.getName());
-                imagem.setUrl(url);
-                imagem = imagemDao.create(imagem, u.getCodigo());
-
-                // cria um arquivo com local, nome e a extensao do arquivo
-                File f = new File(caminho + url);
-                // grava o arquivo na pasta;
-                item.write(f);
+            List<FileItem> arquivos = upload.parseRequest(req);
+            Iterator<FileItem> iterador = arquivos.iterator();
+            FileItem item;
+            while (iterador.hasNext()) {
+                item = iterador.next();
+                imagem = manipulaImagem(imagem, caminho, item, usuario);
             }
 
             if (imagem != null) {
@@ -85,11 +108,15 @@ public class UploadServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            System.out.println("Deu nul pointer exception");
-            resp.sendRedirect(req.getContextPath() + "./user?action=dashboard");
-
-            //redireciona o usuario
         }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Usuario usuario = (Usuario) req.getSession().getAttribute("Fotos_User");
+        manipulaImagens(inicializaConfiguracoes(req), req, resp, usuario);
 
     }
 }

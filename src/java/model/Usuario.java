@@ -2,8 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+
 /**
- *
  * Classe Usuario, contem os metodos e atributos aplicaveis a um usuario. Um
  * usuário pode ter várias imagens fazendo o upload delas, pode ver suas imagens
  * também;
@@ -19,6 +19,7 @@ public final class Usuario {
     private String sobre;
     private String urlImg;
     private ArrayList<Imagem> imagens = new ArrayList<>();
+
 
     /**
      * Define um usuario com as suas informaçóes carregadas do banco de dados.
@@ -112,10 +113,7 @@ public final class Usuario {
     }
 
     /**
-     *
      * Remove uma imagem da lista de imagens do usuário.
-     *
-     *
      *
      * @param imagem
      */

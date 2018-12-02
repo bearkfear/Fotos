@@ -4,10 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.sql.Statement;
-
 import java.util.ArrayList;
+
 import model.Associa;
 import model.Marcador;
 
@@ -22,11 +21,11 @@ public class AssociaDao {
             pre.setInt(1, codigoImagem);
             pre.setInt(2, codigoMarcador);
             pre.executeUpdate();
-            
+
             ResultSet rs = pre.getGeneratedKeys();
             rs.next();
             return rs.getInt("codigo");
-            
+
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -56,8 +55,8 @@ public class AssociaDao {
             }
 
             return associacoes;
-            
-            
+
+
         } catch (SQLException e) {
         }
         return null;
